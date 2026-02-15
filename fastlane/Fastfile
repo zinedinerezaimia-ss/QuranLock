@@ -1,0 +1,54 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    
+    # Create API key connection
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{ENV['APP_STORE_API_KEY_ID']}.p8"),
+      duration: 1200,
+      in_house: false
+    )
+
+    # Increment build number (use timestamp)
+    increment_build_number(
+      build_number: Time.now.strftime("%Y%m%d%H%M"),
+      xcodeproj: "QuranLock.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      scheme: "QuranLock",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.zetaentreprise.quranlock" => "QuranLock AppStore"
+        }
+      },
+      clean: true,
+      output_directory: "./build",
+      output_name: "QuranLock.ipa"
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      skip_submission: true
+    )
+
+    UI.success "✅ QuranLock uploaded to TestFlight!"
+  end
+
+  desc "Register devices and refresh profiles"
+  lane :register_device do |options|
+    register_devices(
+      devices: {
+        options[:name] => options[:udid]
+      }
+    )
+  end
+end
