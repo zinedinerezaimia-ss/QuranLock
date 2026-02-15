@@ -25,7 +25,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.zetaentreprise.quranlock" => "QuranLock AppStore"
+          "com.rezaimia.Quranlock" => "QuranLock AppStore"
         }
       },
       clean: true,
