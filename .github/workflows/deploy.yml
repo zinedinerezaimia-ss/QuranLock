@@ -29,7 +29,6 @@ jobs:
           sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
         fi
         xcodebuild -version
-        xcrun simctl list runtimes
 
     - name: Install Ruby
       uses: ruby/setup-ruby@v1
@@ -42,8 +41,6 @@ jobs:
 
     - name: Install certificate and provisioning profile
       env:
-        CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
-        CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
       run: |
         KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
@@ -51,9 +48,7 @@ jobs:
         security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-        CERT_PATH=$RUNNER_TEMP/certificate.p12
-        echo "$CERTIFICATE_BASE64" | base64 --decode > $CERT_PATH
-        security import $CERT_PATH -P "" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security import ./certs/quranlock_nopass.p12 -P "" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
         security list-keychain -d user -s $KEYCHAIN_PATH
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
         PP_PATH=$RUNNER_TEMP/profile.mobileprovision
