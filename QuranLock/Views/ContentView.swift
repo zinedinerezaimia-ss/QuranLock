@@ -2,14 +2,14 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
-    
-    var isRamadan: Bool { appState.ramadanManager.isRamadan }
+    @EnvironmentObject var ramadanManager: RamadanManager
+    @State private var selectedTab = 0
     
     var body: some View {
-        TabView(selection: $appState.selectedTab) {
+        TabView(selection: $selectedTab) {
             HomeView()
                 .tabItem {
-                    Image(systemName: isRamadan ? "moon.stars.fill" : "house.fill")
+                    Image(systemName: "house.fill")
                     Text("Accueil")
                 }
                 .tag(0)
@@ -21,22 +21,41 @@ struct ContentView: View {
                 }
                 .tag(1)
             
-            if isRamadan {
-                RamadanView()
-                    .tabItem {
-                        Image(systemName: "moon.fill")
-                        Text("Ramadan")
-                    }
-                    .tag(2)
-            }
-            
-            SettingsView()
+            ArabicCoursesView()
                 .tabItem {
-                    Image(systemName: "gearshape.fill")
-                    Text("Réglages")
+                    Image(systemName: "character.book.closed.fill")
+                    Text("Arabe")
                 }
-                .tag(isRamadan ? 3 : 2)
+                .tag(2)
+            
+            DuaasMainView()
+                .tabItem {
+                    Image(systemName: "hands.clap.fill")
+                    Text("Duaas")
+                }
+                .tag(3)
+            
+            QuizMainView()
+                .tabItem {
+                    Image(systemName: "brain.head.profile")
+                    Text("Quiz")
+                }
+                .tag(4)
+            
+            SadaqaView()
+                .tabItem {
+                    Image(systemName: "heart.fill")
+                    Text("Sadaqa")
+                }
+                .tag(5)
         }
-        .tint(Theme.primary(isRamadan: isRamadan))
+        .accentColor(Theme.gold)
+        .onAppear {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Theme.primaryBg)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
 }

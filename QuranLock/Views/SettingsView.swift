@@ -2,146 +2,191 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
-    @State private var editingName = false
-    @State private var tempName = ""
-    
-    var isRamadan: Bool { appState.ramadanManager.isRamadan }
+    @Environment(\.dismiss) var dismiss
+    @State private var showResetAlert = false
+    @State private var showAbout = false
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Profile
-                    VStack(spacing: 12) {
-                        Text("👤")
-                            .font(.system(size: 50))
-                        
-                        if editingName {
-                            HStack {
-                                TextField("Prénom", text: $tempName)
-                                    .textFieldStyle(.roundedBorder)
-                                Button("OK") {
-                                    appState.userName = tempName
-                                    appState.save()
-                                    editingName = false
+            ZStack {
+                Theme.primaryBg.ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Profile
+                        VStack(spacing: 12) {
+                            Circle()
+                                .fill(Theme.gold)
+                                .frame(width: 70, height: 70)
+                                .overlay(
+                                    Text(String(appState.userName.prefix(1)).uppercased())
+                                        .font(.title.bold())
+                                        .foregroundColor(.black)
+                                )
+                            
+                            Text(appState.userName.isEmpty ? "Utilisateur" : appState.userName)
+                                .font(.title3.bold())
+                                .foregroundColor(.white)
+                            
+                            HStack(spacing: 20) {
+                                VStack {
+                                    Text("\(appState.hasanat)")
+                                        .font(.title2.bold())
+                                        .foregroundColor(Theme.gold)
+                                    Text("Hasanat")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
                                 }
-                                .foregroundColor(Theme.primary(isRamadan: isRamadan))
-                            }
-                            .padding(.horizontal, 40)
-                        } else {
-                            HStack {
-                                Text(appState.userName)
-                                    .font(.title2.bold())
-                                    .foregroundColor(Theme.textPrimary)
-                                Button(action: {
-                                    tempName = appState.userName
-                                    editingName = true
-                                }) {
-                                    Image(systemName: "pencil")
+                                
+                                VStack {
+                                    Text("\(appState.currentStreak)")
+                                        .font(.title2.bold())
+                                        .foregroundColor(Theme.success)
+                                    Text("Jours")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+                                
+                                VStack {
+                                    Text("\(appState.completedSurahIndices.count)")
+                                        .font(.title2.bold())
+                                        .foregroundColor(Theme.accent)
+                                    Text("Sourates")
+                                        .font(.caption)
                                         .foregroundColor(Theme.textSecondary)
                                 }
                             }
                         }
-                    }
-                    .padding()
-                    
-                    // Daily Goal
-                    settingsCard(title: "Objectif quotidien") {
-                        Stepper("\(appState.dailyGoalPages) pages / jour", value: Binding(
-                            get: { appState.dailyGoalPages },
-                            set: { newVal in
-                                appState.dailyGoalPages = newVal
-                                appState.save()
+                        .cardStyle()
+                        
+                        // Settings sections
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("⚙️ Paramètres")
+                                .font(.headline)
+                                .foregroundColor(Theme.gold)
+                            
+                            // Name
+                            HStack {
+                                Image(systemName: "person.fill")
+                                    .foregroundColor(Theme.gold)
+                                TextField("Ton prénom", text: $appState.userName)
+                                    .foregroundColor(.white)
                             }
-                        ), in: 1...50)
-                        .foregroundColor(Theme.textPrimary)
-                    }
-                    
-                    // Stats
-                    settingsCard(title: "Statistiques") {
-                        VStack(spacing: 10) {
-                            statRow("Pages lues aujourd'hui", "\(appState.pagesReadToday)")
-                            statRow("Total pages lues", "\(appState.totalPagesRead)")
-                            statRow("Jours consécutifs", "\(appState.streakDays)")
-                            statRow("Sourate actuelle", "\(appState.currentSurah)/114")
-                        }
-                    }
-                    
-                    // Ramadan Info
-                    if isRamadan {
-                        settingsCard(title: "🌙 Ramadan 2026") {
-                            VStack(spacing: 10) {
-                                statRow("Jour", "\(appState.ramadanManager.currentDay)/30")
-                                statRow("Jours restants", "\(appState.ramadanManager.daysRemaining)")
-                                statRow("10 dernières nuits", appState.ramadanManager.isLastTenNights ? "OUI ⭐" : "Non")
-                                statRow("Fajr", appState.ramadanManager.fajrTime)
-                                statRow("Maghrib", appState.ramadanManager.maghribTime)
-                            }
-                        }
-                    }
-                    
-                    // Reset
-                    Button(action: {
-                        appState.pagesReadToday = 0
-                        appState.save()
-                    }) {
-                        Text("Réinitialiser les pages du jour")
-                            .font(.subheadline)
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
                             .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.red.opacity(0.1))
-                            )
-                    }
-                    
-                    // About
-                    VStack(spacing: 6) {
-                        Text("QuranLock V4")
-                            .font(.caption.bold())
-                            .foregroundColor(Theme.textSecondary)
-                        Text("Par ZETA Entreprise")
-                            .font(.caption)
-                            .foregroundColor(Theme.textSecondary)
-                        Text("© 2026 - Tous droits réservés")
-                            .font(.caption2)
-                            .foregroundColor(Theme.textSecondary.opacity(0.5))
+                            .background(Theme.secondaryBg)
+                            .cornerRadius(10)
+                            
+                            // Daily goal
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Image(systemName: "target")
+                                        .foregroundColor(Theme.gold)
+                                    Text("Objectif quotidien : \(appState.dailyGoal) pages")
+                                        .foregroundColor(.white)
+                                }
+                                
+                                Slider(value: Binding(
+                                    get: { Double(appState.dailyGoal) },
+                                    set: { appState.dailyGoal = Int($0) }
+                                ), in: 1...30, step: 1)
+                                .tint(Theme.gold)
+                            }
+                            .padding()
+                            .background(Theme.secondaryBg)
+                            .cornerRadius(10)
+                            
+                            // Ramadan toggle
+                            Toggle(isOn: $appState.ramadanModeEnabled) {
+                                HStack {
+                                    Image(systemName: "moon.stars.fill")
+                                        .foregroundColor(Theme.ramadanGold)
+                                    Text("Mode Ramadan")
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .tint(Theme.gold)
+                            .padding()
+                            .background(Theme.secondaryBg)
+                            .cornerRadius(10)
+                        }
+                        .cardStyle()
+                        
+                        // App info
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("ℹ️ À propos")
+                                .font(.headline)
+                                .foregroundColor(Theme.gold)
+                            
+                            InfoRow(icon: "app.badge", label: "Version", value: "1.0.0")
+                            InfoRow(icon: "building.2", label: "Développeur", value: "ZETA Entreprise")
+                            InfoRow(icon: "heart.fill", label: "Fait avec", value: "Amour & Taqwa")
+                        }
+                        .cardStyle()
+                        
+                        // Danger zone
+                        VStack(spacing: 12) {
+                            Text("⚠️ Zone dangereuse")
+                                .font(.headline)
+                                .foregroundColor(Theme.danger)
+                            
+                            Button(action: { showResetAlert = true }) {
+                                HStack {
+                                    Image(systemName: "trash")
+                                    Text("Réinitialiser toutes les données")
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(Theme.danger)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Theme.danger.opacity(0.1))
+                                .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Theme.danger.opacity(0.3), lineWidth: 1)
+                                )
+                            }
+                        }
+                        .cardStyle()
                     }
                     .padding()
                 }
-                .padding(.horizontal)
             }
-            .background(Theme.background(isRamadan: isRamadan).ignoresSafeArea())
-            .navigationTitle("⚙️ Réglages")
+            .navigationTitle("Paramètres")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Fermer") { dismiss() }
+                        .foregroundColor(Theme.gold)
+                }
+            }
+            .alert("Réinitialiser ?", isPresented: $showResetAlert) {
+                Button("Annuler", role: .cancel) { }
+                Button("Réinitialiser", role: .destructive) {
+                    appState.resetAll()
+                }
+            } message: {
+                Text("Toutes tes données (hasanat, progression, sourates lues) seront supprimées. Cette action est irréversible.")
+            }
         }
     }
+}
+
+struct InfoRow: View {
+    let icon: String
+    let label: String
+    let value: String
     
-    func settingsCard(title: String, @ViewBuilder content: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
-                .foregroundColor(Theme.primary(isRamadan: isRamadan))
-            content()
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.card(isRamadan: isRamadan))
-        )
-    }
-    
-    func statRow(_ label: String, _ value: String) -> some View {
+    var body: some View {
         HStack {
+            Image(systemName: icon)
+                .foregroundColor(Theme.gold)
+                .frame(width: 24)
             Text(label)
-                .font(.subheadline)
-                .foregroundColor(Theme.textSecondary)
+                .foregroundColor(.white)
             Spacer()
             Text(value)
-                .font(.subheadline.bold())
-                .foregroundColor(Theme.textPrimary)
+                .foregroundColor(Theme.textSecondary)
         }
+        .font(.subheadline)
     }
 }

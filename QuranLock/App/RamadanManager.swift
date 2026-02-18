@@ -1,115 +1,94 @@
-import Foundation
+import SwiftUI
+import Combine
 
 class RamadanManager: ObservableObject {
-    // Ramadan 2026: February 18 - March 19, 2026
-    static let ramadanStart2026 = Calendar.current.date(from: DateComponents(year: 2026, month: 2, day: 18))!
-    static let ramadanEnd2026 = Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 19))!
-    
     @Published var isRamadan: Bool = false
-    @Published var currentDay: Int = 0 // 1-30
-    @Published var currentNight: Int = 0
-    @Published var isLastTenNights: Bool = false
-    @Published var isOddNight: Bool = false
+    @Published var ramadanDay: Int = 0
     @Published var daysRemaining: Int = 0
     @Published var daysUntilRamadan: Int = 0
-    
-    // Prayer times for Paris/Saint-Denis (approximate)
-    @Published var fajrTime: String = "06:15"
+    @Published var fajrTime: String = "05:45"
     @Published var maghribTime: String = "18:30"
     @Published var iftarCountdown: String = ""
+    @Published var isLastTenNights: Bool = false
+    @Published var isOddNight: Bool = false
     
     private var timer: Timer?
+    
+    // Ramadan 2026: Feb 18 - Mar 19 (approx)
+    let ramadanStart = Calendar.current.date(from: DateComponents(year: 2026, month: 2, day: 18))!
+    let ramadanEnd = Calendar.current.date(from: DateComponents(year: 2026, month: 3, day: 19))!
+    
+    // Prayer times for Paris (approximate, varies by day)
+    let fajrTimes: [Int: String] = [
+        1: "06:30", 2: "06:28", 3: "06:26", 4: "06:24", 5: "06:22",
+        6: "06:20", 7: "06:18", 8: "06:16", 9: "06:14", 10: "06:12",
+        11: "06:09", 12: "06:07", 13: "06:05", 14: "06:02", 15: "06:00",
+        16: "05:57", 17: "05:55", 18: "05:52", 19: "05:50", 20: "05:47",
+        21: "05:45", 22: "05:42", 23: "05:40", 24: "05:37", 25: "05:35",
+        26: "05:32", 27: "05:30", 28: "05:27", 29: "05:25", 30: "05:22"
+    ]
+    
+    let maghribTimes: [Int: String] = [
+        1: "18:15", 2: "18:16", 3: "18:18", 4: "18:19", 5: "18:21",
+        6: "18:22", 7: "18:24", 8: "18:25", 9: "18:27", 10: "18:28",
+        11: "18:30", 12: "18:31", 13: "18:33", 14: "18:34", 15: "18:36",
+        16: "18:37", 17: "18:39", 18: "18:40", 19: "18:42", 20: "18:43",
+        21: "18:45", 22: "18:46", 23: "18:48", 24: "18:49", 25: "18:51",
+        26: "18:52", 27: "18:54", 28: "18:55", 29: "18:57", 30: "18:58"
+    ]
     
     init() {
         updateRamadanStatus()
         startTimer()
     }
     
+    func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            self?.updateRamadanStatus()
+        }
+    }
+    
     func updateRamadanStatus() {
         let now = Date()
         let calendar = Calendar.current
         
-        if now >= RamadanManager.ramadanStart2026 && now <= RamadanManager.ramadanEnd2026 {
+        if now >= ramadanStart && now <= ramadanEnd {
             isRamadan = true
-            let components = calendar.dateComponents([.day], from: RamadanManager.ramadanStart2026, to: now)
-            currentDay = (components.day ?? 0) + 1
-            currentNight = currentDay
-            isLastTenNights = currentDay >= 21
-            isOddNight = currentDay % 2 != 0
+            ramadanDay = calendar.dateComponents([.day], from: ramadanStart, to: now).day! + 1
+            daysRemaining = calendar.dateComponents([.day], from: now, to: ramadanEnd).day! + 1
+            isLastTenNights = ramadanDay >= 21
+            isOddNight = ramadanDay >= 21 && ramadanDay % 2 == 1
             
-            let remainComponents = calendar.dateComponents([.day], from: now, to: RamadanManager.ramadanEnd2026)
-            daysRemaining = (remainComponents.day ?? 0)
-            daysUntilRamadan = 0
-            
-            updatePrayerTimes()
+            fajrTime = fajrTimes[ramadanDay] ?? "06:00"
+            maghribTime = maghribTimes[ramadanDay] ?? "18:30"
             updateIftarCountdown()
-        } else if now < RamadanManager.ramadanStart2026 {
+        } else if now < ramadanStart {
             isRamadan = false
-            let components = calendar.dateComponents([.day], from: now, to: RamadanManager.ramadanStart2026)
-            daysUntilRamadan = (components.day ?? 0)
+            daysUntilRamadan = calendar.dateComponents([.day], from: now, to: ramadanStart).day! + 1
         } else {
             isRamadan = false
-            daysUntilRamadan = -1 // Ramadan passed
-        }
-    }
-    
-    private func updatePrayerTimes() {
-        // Approximate times for Paris area during Feb-March 2026
-        let day = currentDay
-        if day <= 10 {
-            fajrTime = "06:\(String(format: "%02d", 20 - day))"
-            maghribTime = "18:\(String(format: "%02d", 25 + day))"
-        } else if day <= 20 {
-            fajrTime = "06:\(String(format: "%02d", 10 - (day - 10)))"
-            maghribTime = "18:\(String(format: "%02d", 35 + (day - 10)))"
-        } else {
-            fajrTime = "05:\(String(format: "%02d", 60 - (day - 20)))"
-            maghribTime = "19:\(String(format: "%02d", (day - 20) - 1))"
+            daysUntilRamadan = 0
         }
     }
     
     func updateIftarCountdown() {
         let now = Date()
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.hour, .minute], from: now)
-        let currentHour = components.hour ?? 0
-        let currentMinute = components.minute ?? 0
+        let maghribStr = maghribTimes[ramadanDay] ?? "18:30"
+        let parts = maghribStr.split(separator: ":").compactMap { Int($0) }
+        guard parts.count == 2 else { return }
         
-        // Parse maghrib time
-        let parts = maghribTime.split(separator: ":")
-        let maghribHour = Int(parts[0]) ?? 18
-        let maghribMinute = Int(parts[1]) ?? 30
+        var iftarComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        iftarComponents.hour = parts[0]
+        iftarComponents.minute = parts[1]
         
-        let totalMinutesNow = currentHour * 60 + currentMinute
-        let totalMinutesMaghrib = maghribHour * 60 + maghribMinute
+        guard let iftarDate = calendar.date(from: iftarComponents) else { return }
         
-        if totalMinutesNow < totalMinutesMaghrib {
-            let diff = totalMinutesMaghrib - totalMinutesNow
-            let hours = diff / 60
-            let minutes = diff % 60
-            iftarCountdown = "\(hours)h \(String(format: "%02d", minutes))min"
+        if now < iftarDate {
+            let diff = calendar.dateComponents([.hour, .minute], from: now, to: iftarDate)
+            iftarCountdown = String(format: "%02dh %02dm", diff.hour ?? 0, diff.minute ?? 0)
         } else {
             iftarCountdown = "Iftar passé"
-        }
-    }
-    
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
-            self?.updateRamadanStatus()
-        }
-    }
-    
-    func getRamadanNights() -> [RamadanNight] {
-        let calendar = Calendar.current
-        return (1...30).map { day in
-            let date = calendar.date(byAdding: .day, value: day - 1, to: RamadanManager.ramadanStart2026) ?? Date()
-            let isLastTen = day >= 21
-            let isOdd = day % 2 != 0
-            var note: String? = nil
-            if isLastTen && isOdd {
-                note = "🌙 Nuit possiblement Laylat al-Qadr"
-            }
-            return RamadanNight(id: day, date: date, isOdd: isOdd, isLastTen: isLastTen, specialNote: note)
         }
     }
     
