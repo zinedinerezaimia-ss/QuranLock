@@ -5,7 +5,7 @@ struct CommunityView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
     @State private var showNewPost = false
-    @State private var selectedFilter: PostType? = nil
+    @State private var selectedFilter: CommunityPost.PostType? = nil
     
     var filteredPosts: [CommunityPost] {
         if let filter = selectedFilter {
@@ -21,22 +21,17 @@ struct CommunityView: View {
                 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Filter tabs
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
-                                FilterChip(title: "Tout", isSelected: selectedFilter == nil) {
-                                    selectedFilter = nil
-                                }
-                                ForEach(PostType.allCases, id: \.rawValue) { type in
-                                    FilterChip(title: type.label, isSelected: selectedFilter == type) {
-                                        selectedFilter = type
-                                    }
-                                }
+                                FilterChip(title: "Tout", isSelected: selectedFilter == nil) { selectedFilter = nil }
+                                FilterChip(title: "💭 Réflexion", isSelected: selectedFilter == .reflection) { selectedFilter = .reflection }
+                                FilterChip(title: "❓ Question", isSelected: selectedFilter == .question) { selectedFilter = .question }
+                                FilterChip(title: "💬 Discussion", isSelected: selectedFilter == .discussion) { selectedFilter = .discussion }
+                                FilterChip(title: "🎙️ Récitation", isSelected: selectedFilter == .recitation) { selectedFilter = .recitation }
                             }
                             .padding(.horizontal)
                         }
                         
-                        // Posts
                         ForEach(filteredPosts) { post in
                             PostCard(post: post)
                         }
@@ -47,9 +42,6 @@ struct CommunityView: View {
                                 Text("Aucune publication")
                                     .font(.headline)
                                     .foregroundColor(Theme.textSecondary)
-                                Text("Sois le premier à partager !")
-                                    .font(.caption)
-                                    .foregroundColor(Theme.textSecondary)
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.top, 40)
@@ -58,7 +50,6 @@ struct CommunityView: View {
                     .padding(.bottom, 80)
                 }
                 
-                // FAB
                 VStack {
                     Spacer()
                     HStack {
@@ -70,7 +61,6 @@ struct CommunityView: View {
                                 .frame(width: 56, height: 56)
                                 .background(Theme.gold)
                                 .clipShape(Circle())
-                                .shadow(color: Theme.gold.opacity(0.4), radius: 8)
                         }
                         .padding(.trailing, 20)
                         .padding(.bottom, 20)
@@ -81,13 +71,10 @@ struct CommunityView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Fermer") { dismiss() }
-                        .foregroundColor(Theme.gold)
+                    Button("Fermer") { dismiss() }.foregroundColor(Theme.gold)
                 }
             }
-            .sheet(isPresented: $showNewPost) {
-                NewPostView()
-            }
+            .sheet(isPresented: $showNewPost) { NewPostView() }
         }
     }
 }
@@ -110,32 +97,31 @@ struct FilterChip: View {
     }
 }
 
-enum PostType: String, CaseIterable {
-    case reflection = "Réflexion"
-    case question = "Question"
-    case discussion = "Discussion"
-    case recitation = "Récitation"
-    
-    var label: String { rawValue }
-    var icon: String {
-        switch self {
-        case .reflection: return "💭"
-        case .question: return "❓"
-        case .discussion: return "💬"
-        case .recitation: return "🎙️"
-        }
-    }
-}
-
 struct PostCard: View {
     let post: CommunityPost
     @EnvironmentObject var communityManager: CommunityManager
     @State private var showReplies = false
     @State private var replyText = ""
     
+    var typeIcon: String {
+        switch post.type {
+        case .reflection: return "💭"
+        case .question: return "❓"
+        case .discussion: return "💬"
+        case .recitation: return "🎙️"
+        }
+    }
+    
+    var timeAgoText: String {
+        let interval = Date().timeIntervalSince(post.timestamp)
+        if interval < 60 { return "À l'instant" }
+        if interval < 3600 { return "Il y a \(Int(interval / 60)) min" }
+        if interval < 86400 { return "Il y a \(Int(interval / 3600))h" }
+        return "Il y a \(Int(interval / 86400))j"
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header
             HStack {
                 Circle()
                     .fill(Theme.accent)
@@ -143,27 +129,16 @@ struct PostCard: View {
                     .overlay(Text(String(post.authorName.prefix(1))).foregroundColor(.white).font(.headline))
                 
                 VStack(alignment: .leading) {
-                    Text(post.authorName)
-                        .font(.subheadline.bold())
-                        .foregroundColor(.white)
-                    Text(post.timeAgo)
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
+                    Text(post.authorName).font(.subheadline.bold()).foregroundColor(.white)
+                    Text(timeAgoText).font(.caption).foregroundColor(Theme.textSecondary)
                 }
-                
                 Spacer()
-                
-                Text(post.type.icon)
-                    .font(.title3)
+                Text(typeIcon).font(.title3)
             }
             
-            // Content
-            Text(post.content)
-                .font(.subheadline)
-                .foregroundColor(.white)
+            Text(post.content).font(.subheadline).foregroundColor(.white)
             
-            // Surah reference
-            if let surah = post.surahReference {
+            if let surah = post.surahName {
                 HStack {
                     Image(systemName: "book.fill")
                     Text(surah)
@@ -178,81 +153,62 @@ struct PostCard: View {
             
             Divider().background(Theme.cardBorder)
             
-            // Actions
             HStack(spacing: 20) {
-                Button(action: { communityManager.toggleLike(post.id) }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: post.isLiked ? "heart.fill" : "heart")
-                            .foregroundColor(post.isLiked ? .red : Theme.textSecondary)
-                        Text("\(post.likes)")
-                            .font(.caption)
-                            .foregroundColor(Theme.textSecondary)
-                    }
+                HStack(spacing: 4) {
+                    Image(systemName: "heart")
+                    Text("\(post.likes)")
                 }
+                .font(.caption).foregroundColor(Theme.textSecondary)
                 
                 Button(action: { withAnimation { showReplies.toggle() } }) {
                     HStack(spacing: 4) {
                         Image(systemName: "bubble.right")
                         Text("\(post.replies.count)")
                     }
-                    .font(.caption)
-                    .foregroundColor(Theme.textSecondary)
+                    .font(.caption).foregroundColor(Theme.textSecondary)
                 }
-                
                 Spacer()
-                
-                Button(action: {}) {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                }
             }
             
-            // Replies section
             if showReplies {
-                VStack(spacing: 8) {
-                    ForEach(post.replies) { reply in
-                        HStack(alignment: .top, spacing: 8) {
-                            Circle()
-                                .fill(Theme.secondaryBg)
-                                .frame(width: 24, height: 24)
-                                .overlay(Text(String(reply.authorName.prefix(1))).foregroundColor(.white).font(.caption2))
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(reply.authorName)
-                                    .font(.caption.bold())
-                                    .foregroundColor(.white)
-                                Text(reply.content)
-                                    .font(.caption)
-                                    .foregroundColor(Theme.textSecondary)
-                            }
-                        }
-                    }
-                    
-                    HStack {
-                        TextField("Répondre...", text: $replyText)
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding(8)
-                            .background(Theme.secondaryBg)
-                            .cornerRadius(8)
-                        
-                        Button(action: {
-                            if !replyText.isEmpty {
-                                communityManager.addReply(to: post.id, content: replyText, author: "Moi")
-                                replyText = ""
-                            }
-                        }) {
-                            Image(systemName: "paperplane.fill")
-                                .foregroundColor(Theme.gold)
-                        }
-                    }
-                }
-                .padding(.leading, 16)
+                repliesSection
             }
         }
         .cardStyle()
         .padding(.horizontal, 16)
+    }
+    
+    var repliesSection: some View {
+        VStack(spacing: 8) {
+            ForEach(post.replies) { reply in
+                HStack(alignment: .top, spacing: 8) {
+                    Circle()
+                        .fill(Theme.secondaryBg)
+                        .frame(width: 24, height: 24)
+                        .overlay(Text(String(reply.authorName.prefix(1))).foregroundColor(.white).font(.caption2))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(reply.authorName).font(.caption.bold()).foregroundColor(.white)
+                        Text(reply.content).font(.caption).foregroundColor(Theme.textSecondary)
+                    }
+                }
+            }
+            
+            HStack {
+                TextField("Répondre...", text: $replyText)
+                    .font(.caption).foregroundColor(.white)
+                    .padding(8).background(Theme.secondaryBg).cornerRadius(8)
+                
+                Button(action: {
+                    if !replyText.isEmpty {
+                        communityManager.addReply(to: post.id, authorName: "Moi", content: replyText)
+                        replyText = ""
+                    }
+                }) {
+                    Image(systemName: "paperplane.fill").foregroundColor(Theme.gold)
+                }
+            }
+        }
+        .padding(.leading, 16)
     }
 }
 
@@ -261,7 +217,7 @@ struct NewPostView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
     @State private var content = ""
-    @State private var selectedType: PostType = .reflection
+    @State private var selectedType: CommunityPost.PostType = .reflection
     @State private var surahRef = ""
     
     var body: some View {
@@ -271,82 +227,50 @@ struct NewPostView: View {
                 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Type selection
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Type de publication")
-                                .font(.headline)
-                                .foregroundColor(Theme.gold)
+                            Text("Type de publication").font(.headline).foregroundColor(Theme.gold)
                             
                             HStack(spacing: 8) {
-                                ForEach(PostType.allCases, id: \.rawValue) { type in
-                                    Button(action: { selectedType = type }) {
-                                        VStack {
-                                            Text(type.icon).font(.title2)
-                                            Text(type.rawValue).font(.caption2)
-                                        }
-                                        .foregroundColor(selectedType == type ? .black : .white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 10)
-                                        .background(selectedType == type ? Theme.gold : Theme.secondaryBg)
-                                        .cornerRadius(10)
-                                    }
-                                }
+                                typeBtn("💭", "Réflexion", .reflection)
+                                typeBtn("❓", "Question", .question)
+                                typeBtn("💬", "Discussion", .discussion)
+                                typeBtn("🎙️", "Récitation", .recitation)
                             }
                         }
                         .cardStyle()
                         
-                        // Content
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Contenu")
-                                .font(.headline)
-                                .foregroundColor(Theme.gold)
-                            
+                            Text("Contenu").font(.headline).foregroundColor(Theme.gold)
                             TextEditor(text: $content)
                                 .frame(minHeight: 120)
-                                .padding(8)
-                                .background(Theme.secondaryBg)
-                                .cornerRadius(12)
+                                .padding(8).background(Theme.secondaryBg).cornerRadius(12)
                                 .foregroundColor(.white)
                         }
                         .cardStyle()
                         
-                        // Surah reference
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Référence (optionnel)")
-                                .font(.headline)
-                                .foregroundColor(Theme.gold)
-                            
-                            TextField("Ex: Sourate Al-Baqara 2:255", text: $surahRef)
-                                .foregroundColor(.white)
-                                .padding(12)
-                                .background(Theme.secondaryBg)
-                                .cornerRadius(10)
+                            Text("Référence (optionnel)").font(.headline).foregroundColor(Theme.gold)
+                            TextField("Ex: Al-Baqara", text: $surahRef)
+                                .foregroundColor(.white).padding(12)
+                                .background(Theme.secondaryBg).cornerRadius(10)
                         }
                         .cardStyle()
                         
-                        // Publish
                         Button(action: {
                             if !content.isEmpty {
-                                let post = CommunityPost(
-                                    id: UUID().uuidString,
+                                communityManager.addPost(
                                     authorName: appState.userName.isEmpty ? "Anonyme" : appState.userName,
-                                    type: selectedType,
                                     content: content,
-                                    surahReference: surahRef.isEmpty ? nil : surahRef,
-                                    likes: 0,
-                                    isLiked: false,
-                                    replies: [],
-                                    timeAgo: "À l'instant"
+                                    type: selectedType,
+                                    surahName: surahRef.isEmpty ? nil : surahRef
                                 )
-                                communityManager.addPost(post)
                                 appState.addHasanat(3)
                                 dismiss()
                             }
                         }) {
                             Text("Publier ✨").goldButton()
                         }
-                        .disabled(content.isEmpty)
-                        .opacity(content.isEmpty ? 0.5 : 1)
+                        .disabled(content.isEmpty).opacity(content.isEmpty ? 0.5 : 1)
                     }
                     .padding()
                 }
@@ -355,10 +279,23 @@ struct NewPostView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Annuler") { dismiss() }
-                        .foregroundColor(Theme.gold)
+                    Button("Annuler") { dismiss() }.foregroundColor(Theme.gold)
                 }
             }
+        }
+    }
+    
+    func typeBtn(_ icon: String, _ label: String, _ type: CommunityPost.PostType) -> some View {
+        Button(action: { selectedType = type }) {
+            VStack {
+                Text(icon).font(.title2)
+                Text(label).font(.caption2)
+            }
+            .foregroundColor(selectedType == type ? .black : .white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(selectedType == type ? Theme.gold : Theme.secondaryBg)
+            .cornerRadius(10)
         }
     }
 }
