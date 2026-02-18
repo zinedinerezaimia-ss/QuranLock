@@ -13,52 +13,52 @@ struct HomeView: View {
     @State private var showKhatm = false
     @State private var showProphet = false
     @State private var showSadaqa = false
+    @State private var showRamadan = false
 
     var body: some View {
         NavigationView {
             ZStack {
                 Theme.primaryBg.ignoresSafeArea()
-
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 16) {
                         headerSection
-
-                        if ramadanManager.isRamadan && appState.ramadanModeEnabled {
+                        if ramadanManager.isRamadan {
                             ramadanBanner
                         } else if ramadanManager.daysUntilRamadan > 0 && ramadanManager.daysUntilRamadan <= 30 {
                             preRamadanBanner
                         }
-
                         currentSurahCard
                         questionSection
                         quickAccessSection
                         communitySection
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 20)
+                    .padding(.horizontal, 16).padding(.bottom, 20)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack(spacing: 6) {
-                        Text("إقرأ")
-                            .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(Theme.gold)
+                        Text("إقرأ").font(.system(size: 18, weight: .bold)).foregroundColor(Theme.gold)
                         HStack(spacing: 4) {
                             Image(systemName: "hand.thumbsup.fill").font(.caption)
                             Text("\(appState.hasanat)").font(.caption.bold())
                         }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.orange)
-                        .cornerRadius(20)
+                        .foregroundColor(.white).padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.orange).cornerRadius(20)
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showSettings = true }) {
-                        Image(systemName: "gearshape.fill").foregroundColor(Theme.textSecondary)
+                    HStack(spacing: 12) {
+                        if ramadanManager.isRamadan {
+                            Button(action: { showRamadan = true }) {
+                                Text("🌙").font(.title3).padding(6)
+                                    .background(Theme.ramadanPurple.opacity(0.5)).cornerRadius(10)
+                            }
+                        }
+                        Button(action: { showSettings = true }) {
+                            Image(systemName: "gearshape.fill").foregroundColor(Theme.textSecondary)
+                        }
                     }
                 }
             }
@@ -70,49 +70,50 @@ struct HomeView: View {
             .sheet(isPresented: $showKhatm) { KhatmChallengeView() }
             .sheet(isPresented: $showProphet) { ProphetStoriesView() }
             .sheet(isPresented: $showSadaqa) { SadaqaView() }
+            .sheet(isPresented: $showRamadan) {
+                RamadanView().environmentObject(ramadanManager)
+            }
         }
     }
 
-    // MARK: - Header
     var headerSection: some View {
         VStack(spacing: 4) {
-            Text("السلام عليكم \(appState.userName)")
-                .font(.system(size: 22, weight: .bold))
-                .foregroundColor(.white)
-            Text("Que ta journée soit bénie")
-                .font(.subheadline)
-                .foregroundColor(Theme.textSecondary)
+            Text("السلام عليكم \(appState.userName)").font(.system(size: 22, weight: .bold)).foregroundColor(.white)
+            Text("Que ta journée soit bénie").font(.subheadline).foregroundColor(Theme.textSecondary)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .cardStyle()
+        .frame(maxWidth: .infinity).padding(.vertical, 16).cardStyle()
     }
 
-    // MARK: - Ramadan Banner
     var ramadanBanner: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text("🌙 Ramadan Mubarak").font(.headline).foregroundColor(Theme.ramadanGold)
-                Spacer()
-                Text("Jour \(ramadanManager.ramadanDay)/30").font(.subheadline.bold()).foregroundColor(Theme.ramadanGold)
-            }
-            HStack(spacing: 20) {
-                VStack { Text("Fajr").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.fajrTime).font(.headline).foregroundColor(.white) }
-                VStack { Text("Iftar").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.maghribTime).font(.headline).foregroundColor(Theme.ramadanGold) }
-                VStack { Text("Compte à rebours").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.iftarCountdown).font(.headline).foregroundColor(Theme.ramadanGold) }
-            }
-            if ramadanManager.isLastTenNights {
+        Button(action: { showRamadan = true }) {
+            VStack(spacing: 12) {
                 HStack {
-                    Text("⭐")
-                    Text("Les 10 dernières nuits — Multipliez vos adorations !").font(.caption).foregroundColor(Theme.ramadanGold)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("🌙 Ramadan Mubarak").font(.headline).foregroundColor(Theme.ramadanGold)
+                        Text("Jour \(ramadanManager.ramadanDay)/30 • Appuie pour les duaas & infos")
+                            .font(.caption).foregroundColor(Theme.textSecondary)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundColor(Theme.ramadanGold)
                 }
-                .padding(8).background(Theme.ramadanPurple.opacity(0.3)).cornerRadius(8)
+                HStack(spacing: 20) {
+                    VStack { Text("Fajr").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.fajrTime).font(.headline).foregroundColor(.white) }
+                    VStack { Text("Iftar").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.maghribTime).font(.headline).foregroundColor(Theme.ramadanGold) }
+                    VStack { Text("Compte à rebours").font(.caption).foregroundColor(Theme.textSecondary); Text(ramadanManager.iftarCountdown).font(.headline).foregroundColor(Theme.ramadanGold) }
+                }
+                if ramadanManager.isLastTenNights {
+                    HStack {
+                        Text("⭐")
+                        Text("Les 10 dernières nuits — Cherchez Laylat al-Qadr !").font(.caption).foregroundColor(Theme.ramadanGold)
+                    }
+                    .padding(8).background(Theme.ramadanPurple.opacity(0.3)).cornerRadius(8)
+                }
             }
+            .padding()
+            .background(LinearGradient(colors: [Theme.ramadanPurple, Theme.cardBg], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .cornerRadius(16)
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.ramadanGold.opacity(0.5), lineWidth: 1.5))
         }
-        .padding()
-        .background(LinearGradient(colors: [Theme.ramadanPurple, Theme.cardBg], startPoint: .topLeading, endPoint: .bottomTrailing))
-        .cornerRadius(16)
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Theme.ramadanGold.opacity(0.3), lineWidth: 1))
     }
 
     var preRamadanBanner: some View {
@@ -123,15 +124,13 @@ struct HomeView: View {
                 Text("Plus que \(ramadanManager.daysUntilRamadan) jours").font(.subheadline).foregroundColor(Theme.textSecondary)
             }
             Spacer()
-            Button("Activer") { appState.ramadanModeEnabled = true }
+            Button("Préparer") { showRamadan = true }
                 .font(.caption.bold()).foregroundColor(.black)
-                .padding(.horizontal, 16).padding(.vertical, 8)
-                .background(Theme.gold).cornerRadius(20)
+                .padding(.horizontal, 16).padding(.vertical, 8).background(Theme.gold).cornerRadius(20)
         }
         .cardStyle()
     }
 
-    // MARK: - Current Surah
     var currentSurahCard: some View {
         let surah = DataProvider.surahs[appState.currentSurahIndex]
         return VStack(spacing: 8) {
@@ -147,11 +146,9 @@ struct HomeView: View {
         .frame(maxWidth: .infinity).padding(.vertical, 20).cardStyle()
     }
 
-    // MARK: - Question Section
     var questionSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack { Text("❓"); Text("Pose ta question").font(.headline).foregroundColor(Theme.gold) }
-
             HStack {
                 TextField("Décris ta situation ou pose ta question...", text: $questionText)
                     .foregroundColor(.white).font(.subheadline)
@@ -161,20 +158,19 @@ struct HomeView: View {
                 }
             }
             .padding(12).background(Theme.secondaryBg).cornerRadius(12)
-
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    QuickTag(text: "Période difficile") { questionText = "Je traverse une période difficile" }
-                    QuickTag(text: "Demander pardon") { questionText = "Comment demander pardon à Allah" }
-                    QuickTag(text: "Anxiété") { questionText = "Je souffre d'anxiété" }
-                    QuickTag(text: "Prière") { questionText = "Comment améliorer ma prière" }
+                    QuickTag(text: "Période difficile") { questionText = "période difficile" }
+                    QuickTag(text: "Demander pardon") { questionText = "demander pardon" }
+                    QuickTag(text: "Anxiété") { questionText = "anxiété" }
+                    QuickTag(text: "Prière") { questionText = "prière" }
+                    QuickTag(text: "Ramadan") { questionText = "ramadan" }
                 }
             }
-
             if let answer = aiAnswer {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("💡 Réponse").font(.subheadline.bold()).foregroundColor(Theme.gold)
-                    Text(answer).font(.subheadline).foregroundColor(.white)
+                    Text(answer).font(.subheadline).foregroundColor(.white).lineSpacing(4)
                 }
                 .padding().background(Theme.secondaryBg).cornerRadius(12)
             }
@@ -182,17 +178,13 @@ struct HomeView: View {
         .cardStyle()
     }
 
-    // MARK: - Quick Access (navigation correcte)
     var quickAccessSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack { Text("⚡"); Text("Accès rapide").font(.headline).foregroundColor(Theme.gold) }
-
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                // Tab 1 = Coran
                 QuickAccessButton(icon: "📖", title: "Lire") { appState.selectedTab = 1 }
                 QuickAccessButton(icon: "🏁", title: "Khatm") { showKhatm = true }
                 QuickAccessButton(icon: "🤲", title: "Adhkar") { showAdhkar = true }
-                // Tab 2 = Arabe
                 QuickAccessButton(icon: "🎓", title: "Apprendre") { appState.selectedTab = 2 }
                 QuickAccessButton(icon: "🌙", title: "Prophète ﷺ") { showProphet = true }
                 QuickAccessButton(icon: "🕌", title: "Mosquées") { showSadaqa = true }
@@ -201,7 +193,6 @@ struct HomeView: View {
         .cardStyle()
     }
 
-    // MARK: - Community Section
     var communitySection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -224,23 +215,23 @@ struct HomeView: View {
         .cardStyle()
     }
 
+    // Réponses islamiques vérifiées avec sources
     func answerQuestion() {
         guard !questionText.isEmpty else { return }
         let q = questionText.lowercased()
+
         if q.contains("difficile") || q.contains("épreuve") || q.contains("triste") || q.contains("déprim") {
-            aiAnswer = "🤲 Allah dit : « Certes, avec la difficulté, il y a une facilité » (Sourate Ash-Sharh, 94:6).\n\nRécite beaucoup d'Istighfar et fais confiance à Allah. Chaque épreuve est une purification et une élévation en degré.\n\n📖 Lis Sourate Al-Inshirah (94) pour le réconfort."
+            aiAnswer = "📖 Coran 94:5-6 : « Certes, avec la difficulté vient la facilité. »\n\n🤲 Dua : « Allāhumma lā sahla illā mā ja'altahu sahlā, wa anta taj'alul ḥazna idhā shi'ta sahlā »\n(Ô Allah, rien n'est facile sauf ce que Tu rends facile.)\n📚 Ibn Hibban n°974 — Sahih"
         } else if q.contains("pardon") || q.contains("péché") || q.contains("faute") {
-            aiAnswer = "🤲 Récite le Sayyid al-Istighfar :\n« Allahumma anta Rabbi, la ilaha illa anta, khalaqtani wa ana abduk... »\n\nAllah dit : « Ne désespérez pas de la miséricorde d'Allah. » (39:53)\n\n📖 Lis Sourate At-Tawbah et fais une prière de tawbah sincère."
+            aiAnswer = "🤲 Sayyid al-Istighfar — Celui qui le dit avec conviction le matin et meurt ce jour entre au Paradis :\n« Allāhumma anta Rabbī, lā ilāha illā anta, khalaqtanī wa ana 'abduk... »\n📚 Sahih al-Bukhari n°6306\n\n📖 Coran 39:53 : « Ne désespérez pas de la miséricorde d'Allah. »"
         } else if q.contains("anxiété") || q.contains("stress") || q.contains("peur") || q.contains("angoisse") {
-            aiAnswer = "🤲 Dis : « HasbunAllahu wa ni'mal Wakil » — Allah nous suffit.\n\nRécite aussi :\n• Ayat Al-Kursi (2:255) après chaque prière\n• Sourate Al-Falaq et An-Nas le soir\n• Les adhkars du matin et du soir\n\n📖 « C'est par le rappel d'Allah que les cœurs se tranquillisent. » (13:28)"
-        } else if q.contains("prière") || q.contains("salat") || q.contains("namaz") {
-            aiAnswer = "🕌 Pour améliorer ta prière :\n1. Fais tes ablutions avec soin et intention\n2. Prie à l'heure — ne reporte jamais\n3. Comprends les sourates que tu récites\n4. Pense à la présence d'Allah (Khushu')\n5. Fais des prières surérogatoires (Sunna)\n\nLe Prophète ﷺ a dit : « La fraîcheur de mes yeux a été placée dans la prière. »"
-        } else if q.contains("famille") || q.contains("parent") || q.contains("enfant") {
-            aiAnswer = "🤲 Allah dit : « Et ton Seigneur a décrété que vous n'adoriez que Lui, et que vous fassiez du bien à vos parents. » (17:23)\n\nFais du dua pour ta famille : « Rabbighfirli wa liwalidayya » (Mon Seigneur, pardonne-moi et à mes parents).\n\n📖 Lis Sourate Luqman (31) sur l'éducation et la sagesse."
-        } else if q.contains("travail") || q.contains("argent") || q.contains("rizq") || q.contains("finances") {
-            aiAnswer = "🤲 Pour le Rizq (subsistance), récite :\n« Astaghfirullah » 100 fois par jour — l'Istighfar ouvre les portes de la rizq.\n\nAllah dit : « Et quiconque craint Allah, Il lui trouvera une issue et le pourvoira par où il ne s'y attendait pas. » (65:2-3)\n\n📖 Lis Sourate Al-Waqi'ah chaque soir."
+            aiAnswer = "📖 Coran 13:28 : « C'est par le rappel d'Allah que les cœurs se tranquillisent. »\n\n🤲 Dua du Prophète ﷺ lors de l'anxiété :\n« Allāhumma innī 'abduka, ibnu 'abdika, ibnu amatika, nāṣiyatī biyadik... »\n📚 Musnad Ahmad n°3704 — Sahih selon al-Albani\n\n→ Récite Ayat al-Kursi (2:255) après chaque prière."
+        } else if q.contains("prière") || q.contains("salat") {
+            aiAnswer = "🕌 Le Prophète ﷺ : « La fraîcheur de mes yeux a été placée dans la prière. »\n📚 Sunan an-Nasa'i n°3940 — Sahih\n\nPour le Khushu' : regarde le lieu de prosternation, comprends ce que tu récites.\n📚 Sahih al-Bukhari n°741"
+        } else if q.contains("ramadan") || q.contains("jeûne") {
+            aiAnswer = "🌙 Le Prophète ﷺ : « Quiconque jeûne avec foi et espérant la récompense, tous ses péchés antérieurs lui seront pardonnés. »\n📚 Sahih al-Bukhari n°38\n\n🤲 Dua Iftar : « Dhahaba ẓ-ẓama'u, wabtallatil 'urūqu, wa thabatal ajru in shā'Allah »\n📚 Sunan Abi Dawud n°2357 — Hassan\n\n→ Ouvre la bannière Ramadan 🌙 pour plus de contenu."
         } else {
-            aiAnswer = "🤲 Qu'Allah te guide et t'accorde la facilité. Je te recommande :\n\n• Lire Sourate Al-Fatiha avec méditation\n• Faire des duaas sincères après la prière\n• Consulter les adhkars du matin/soir\n• Partager ta question avec la communauté\n\nRappelle-toi : « Appelez-Moi, Je vous répondrai. » (40:60)"
+            aiAnswer = "📖 Coran 17:36 : « Ne suis pas ce dont tu n'as pas de connaissance. »\n\nPour une réponse précise, partage ta question avec la communauté ou consulte un imam de confiance. Il vaut mieux s'abstenir que parler sans certitude en matière de religion (fatwa)."
         }
         appState.addHasanat(1)
     }
