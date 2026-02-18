@@ -17,7 +17,10 @@ class AppState: ObservableObject {
     @AppStorage("quizHighScore") var quizHighScore: Int = 0
     @AppStorage("musicChallengeActive") var musicChallengeActive: Bool = false
     @AppStorage("musicChallengeDaysCompleted") var musicChallengeDaysCompleted: Int = 0
-    
+
+    // Tab navigation — shared across views
+    @Published var selectedTab: Int = 0
+
     var completedSurahIndices: [Int] {
         get {
             guard let data = khatmCompletedSurahs.data(using: .utf8),
@@ -31,11 +34,11 @@ class AppState: ObservableObject {
             }
         }
     }
-    
+
     var khatmProgress: Double {
         return Double(completedSurahIndices.count) / 114.0
     }
-    
+
     func markSurahCompleted(_ index: Int) {
         var current = completedSurahIndices
         if !current.contains(index) {
@@ -44,11 +47,11 @@ class AppState: ObservableObject {
             addHasanat(10)
         }
     }
-    
+
     func addHasanat(_ amount: Int) {
         hasanat += amount
     }
-    
+
     func updateStreak() {
         let today = Self.dateString(from: Date())
         if lastReadDate != today {
@@ -61,13 +64,13 @@ class AppState: ObservableObject {
             lastReadDate = today
         }
     }
-    
+
     static func dateString(from date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: date)
     }
-    
+
     func resetAll() {
         userName = ""
         dailyGoal = 5
