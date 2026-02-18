@@ -26,12 +26,16 @@
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
-	</dict>
+	<key>CFBundleIconName</key>
+<string>AppIcon</string>
+</dict>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
 		<string>AccentColor</string>
-	</dict>
+	<key>CFBundleIconName</key>
+<string>AppIcon</string>
+</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -49,6 +53,8 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+<key>CFBundleIconName</key>
+<string>AppIcon</string>
 <key>CFBundleIconName</key>
 <string>AppIcon</string>
 </dict>
