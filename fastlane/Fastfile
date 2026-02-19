@@ -2,6 +2,7 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "180"
 ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "6"
 
 default_platform(:ios)
+
 platform :ios do
   desc "Build and upload to TestFlight"
   lane :beta do
@@ -30,7 +31,7 @@ platform :ios do
       clean: true,
       output_directory: "./build",
       output_name: "QuranLock.ipa",
-      xcargs: "DEVELOPMENT_TEAM=J875R59LND CODE_SIGN_IDENTITY='Apple Distribution' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='QuranLock AppStore' -allowProvisioningUpdates"
+      xcargs: "DEVELOPMENT_TEAM=J875R59LND CODE_SIGN_IDENTITY='Apple Distribution' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='QuranLock AppStore' CODE_SIGNING_ALLOWED_FOR_APPS=YES -allowProvisioningUpdates SWIFT_PACKAGE_MANAGER_DELEGATE_FOR_CODESIGNING=NO"
     )
     upload_to_testflight(
       api_key: api_key,
