@@ -22,23 +22,72 @@ jobs:
     - name: Generate Xcode project
       run: xcodegen generate
 
-    - name: Fix SPM codesigning
+    - name: Fix SPM codesigning via PlistBuddy
       run: |
-        ruby -e "
-          require 'xcodeproj'
-          project = Xcodeproj::Project.open('QuranLock.xcodeproj')
-          project.targets.each do |target|
-            next if target.name == 'QuranLock'
-            target.build_configurations.each do |config|
-              config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-              config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
-              config.build_settings['CODE_SIGN_IDENTITY'] = ''
-              config.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = ''
-            end
-          end
-          project.save
-          puts 'SPM targets codesigning disabled'
-        "
+        PBXPROJ="QuranLock.xcodeproj/project.pbxproj"
+        # Patch: for every target that has PROVISIONING_PROFILE_SPECIFIER set (SPM packages),
+        # we use python to patch the pbxproj and disable codesigning
+        python3 - << 'PYEOF'
+        import re
+
+        with open("QuranLock.xcodeproj/project.pbxproj", "r") as f:
+            content = f.read()
+
+        # Find all build configuration blocks for SPM package targets
+        # SPM targets have names like Firebase_FirebaseCore, GoogleUtilities_xxx, etc.
+        # We need to add CODE_SIGNING_ALLOWED = NO to their build settings
+        
+        # Pattern: match build settings blocks that belong to SPM packages
+        # SPM package targets don't have PRODUCT_BUNDLE_IDENTIFIER = com.rezaimia.*
+        # Strategy: add CODE_SIGNING_ALLOWED = NO after ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES
+        # for targets that have PROVISIONING_PROFILE_SPECIFIER but NOT com.rezaimia
+        
+        lines = content.split('\n')
+        result = []
+        in_build_settings = False
+        is_main_target = False
+        added_no_sign = False
+        brace_depth = 0
+        
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+            
+            if 'buildSettings = {' in line:
+                in_build_settings = True
+                is_main_target = False
+                added_no_sign = False
+                brace_depth = 1
+                result.append(line)
+                i += 1
+                continue
+            
+            if in_build_settings:
+                if '{' in line:
+                    brace_depth += line.count('{')
+                if '}' in line:
+                    brace_depth -= line.count('}')
+                
+                if 'com.rezaimia' in line:
+                    is_main_target = True
+                
+                if brace_depth <= 0:
+                    in_build_settings = False
+                    if not is_main_target and not added_no_sign:
+                        result.append('\t\t\t\tCODE_SIGNING_ALLOWED = NO;')
+                        result.append('\t\t\t\tCODE_SIGNING_REQUIRED = NO;')
+                        result.append('\t\t\t\tCODE_SIGN_IDENTITY = "";')
+                        result.append('\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = "";')
+                        added_no_sign = True
+            
+            result.append(line)
+            i += 1
+        
+        with open("QuranLock.xcodeproj/project.pbxproj", "w") as f:
+            f.write('\n'.join(result))
+        
+        print("Done patching pbxproj")
+        PYEOF
 
     - name: Install Ruby
       uses: ruby/setup-ruby@v1
