@@ -8,6 +8,7 @@ struct QuranLockApp: App {
     @StateObject private var ramadanManager = RamadanManager()
     @StateObject private var arabicCourseManager = ArabicCourseManager()
     @StateObject private var musicChallengeManager = MusicChallengeManager()
+    @StateObject private var languageManager = LanguageManager()
 
     init() {
         FirebaseApp.configure()
@@ -21,10 +22,14 @@ struct QuranLockApp: App {
                     .environmentObject(ramadanManager)
                     .environmentObject(arabicCourseManager)
                     .environmentObject(musicChallengeManager)
+                    .environmentObject(languageManager)
                     .preferredColorScheme(.dark)
+                    .environment(\.layoutDirection, languageManager.isRTL ? .rightToLeft : .leftToRight)
+                    .id(languageManager.currentLanguage) // forces full rebuild on language change
             } else {
                 OnboardingView()
                     .environmentObject(appState)
+                    .environmentObject(languageManager)
                     .preferredColorScheme(.dark)
             }
         }

@@ -17,9 +17,15 @@ class AppState: ObservableObject {
     @AppStorage("quizHighScore") var quizHighScore: Int = 0
     @AppStorage("musicChallengeActive") var musicChallengeActive: Bool = false
     @AppStorage("musicChallengeDaysCompleted") var musicChallengeDaysCompleted: Int = 0
+    @AppStorage("appLanguage") var appLanguage: String = AppLanguage.french.rawValue {
+        didSet { objectWillChange.send() }
+    }
 
-    // Tab navigation — shared across views
     @Published var selectedTab: Int = 0
+
+    var currentAppLanguage: AppLanguage {
+        AppLanguage(rawValue: appLanguage) ?? .french
+    }
 
     var completedSurahIndices: [Int] {
         get {
@@ -35,57 +41,33 @@ class AppState: ObservableObject {
         }
     }
 
-    var khatmProgress: Double {
-        return Double(completedSurahIndices.count) / 114.0
-    }
+    var khatmProgress: Double { Double(completedSurahIndices.count) / 114.0 }
 
     func markSurahCompleted(_ index: Int) {
         var current = completedSurahIndices
-        if !current.contains(index) {
-            current.append(index)
-            completedSurahIndices = current
-            addHasanat(10)
-        }
+        if !current.contains(index) { current.append(index); completedSurahIndices = current; addHasanat(10) }
     }
 
-    func addHasanat(_ amount: Int) {
-        hasanat += amount
-    }
+    func addHasanat(_ amount: Int) { hasanat += amount }
 
     func updateStreak() {
         let today = Self.dateString(from: Date())
         if lastReadDate != today {
             let yesterday = Self.dateString(from: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date())
-            if lastReadDate == yesterday {
-                currentStreak += 1
-            } else if lastReadDate != today {
-                currentStreak = 1
-            }
+            currentStreak = lastReadDate == yesterday ? currentStreak + 1 : 1
             lastReadDate = today
         }
     }
 
     static func dateString(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; return f.string(from: date)
     }
 
     func resetAll() {
-        userName = ""
-        dailyGoal = 5
-        pagesRead = 0
-        totalPagesRead = 0
-        currentStreak = 0
-        currentSurahIndex = 0
-        lastReadDate = ""
-        hasCompletedOnboarding = false
-        ramadanModeEnabled = false
-        hasanat = 0
-        arabicLearningRhythm = ""
-        khatmCompletedSurahs = "[]"
-        quizHighScore = 0
-        musicChallengeActive = false
-        musicChallengeDaysCompleted = 0
+        userName = ""; dailyGoal = 5; pagesRead = 0; totalPagesRead = 0
+        currentStreak = 0; currentSurahIndex = 0; lastReadDate = ""
+        hasCompletedOnboarding = false; ramadanModeEnabled = false
+        hasanat = 0; arabicLearningRhythm = ""; khatmCompletedSurahs = "[]"
+        quizHighScore = 0; musicChallengeActive = false; musicChallengeDaysCompleted = 0
     }
 }

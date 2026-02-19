@@ -1,0 +1,1579 @@
+{
+  "surahs": [
+    {
+      "id": 1,
+      "arabicName": "الفاتحة",
+      "frenchName": "L'Ouverture",
+      "englishName": "Al-Fatiha",
+      "verseCount": 7,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+          "french": "Louange à Allah, Seigneur de l'univers,",
+          "english": "All praise is due to Allah, Lord of all the worlds."
+        },
+        {
+          "arabic": "الرَّحْمَنِ الرَّحِيمِ",
+          "french": "le Tout Miséricordieux, le Très Miséricordieux,",
+          "english": "The Entirely Merciful, the Especially Merciful."
+        },
+        {
+          "arabic": "مَالِكِ يَوْمِ الدِّينِ",
+          "french": "Maître du Jour de la rétribution.",
+          "english": "Sovereign of the Day of Recompense."
+        },
+        {
+          "arabic": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
+          "french": "C'est Toi [Seul] que nous adorons, et c'est Toi [Seul] dont nous implorons le secours.",
+          "english": "It is You we worship and You we ask for help."
+        },
+        {
+          "arabic": "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",
+          "french": "Guide-nous dans le droit chemin,",
+          "english": "Guide us to the straight path."
+        },
+        {
+          "arabic": "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ",
+          "french": "le chemin de ceux que Tu as comblés de bienfaits,",
+          "english": "The path of those upon whom You have bestowed favor,"
+        },
+        {
+          "arabic": "غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+          "french": "non pas [le chemin] de ceux qui ont encouru Ta colère, ni des égarés.",
+          "english": "Not of those who have evoked [Your] anger or of those who are astray."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "arabicName": "البقرة",
+      "frenchName": "La Vache",
+      "englishName": "Al-Baqara",
+      "verseCount": 286,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 3,
+      "arabicName": "آل عمران",
+      "frenchName": "La Famille d'Imran",
+      "englishName": "Ali 'Imran",
+      "verseCount": 200,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 4,
+      "arabicName": "النساء",
+      "frenchName": "Les Femmes",
+      "englishName": "An-Nisa",
+      "verseCount": 176,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 5,
+      "arabicName": "المائدة",
+      "frenchName": "La Table Servie",
+      "englishName": "Al-Ma'ida",
+      "verseCount": 120,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 6,
+      "arabicName": "الأنعام",
+      "frenchName": "Les Bestiaux",
+      "englishName": "Al-An'am",
+      "verseCount": 165,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 7,
+      "arabicName": "الأعراف",
+      "frenchName": "Les Murailles",
+      "englishName": "Al-A'raf",
+      "verseCount": 206,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 8,
+      "arabicName": "الأنفال",
+      "frenchName": "Le Butin",
+      "englishName": "Al-Anfal",
+      "verseCount": 75,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 9,
+      "arabicName": "التوبة",
+      "frenchName": "Le Repentir",
+      "englishName": "At-Tawba",
+      "verseCount": 129,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 10,
+      "arabicName": "يونس",
+      "frenchName": "Jonas",
+      "englishName": "Yunus",
+      "verseCount": 109,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 11,
+      "arabicName": "هود",
+      "frenchName": "Hud",
+      "englishName": "Hud",
+      "verseCount": 123,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 12,
+      "arabicName": "يوسف",
+      "frenchName": "Joseph",
+      "englishName": "Yusuf",
+      "verseCount": 111,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 13,
+      "arabicName": "الرعد",
+      "frenchName": "Le Tonnerre",
+      "englishName": "Ar-Ra'd",
+      "verseCount": 43,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 14,
+      "arabicName": "إبراهيم",
+      "frenchName": "Abraham",
+      "englishName": "Ibrahim",
+      "verseCount": 52,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 15,
+      "arabicName": "الحجر",
+      "frenchName": "Al-Hijr",
+      "englishName": "Al-Hijr",
+      "verseCount": 99,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 16,
+      "arabicName": "النحل",
+      "frenchName": "Les Abeilles",
+      "englishName": "An-Nahl",
+      "verseCount": 128,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 17,
+      "arabicName": "الإسراء",
+      "frenchName": "Le Voyage Nocturne",
+      "englishName": "Al-Isra",
+      "verseCount": 111,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 18,
+      "arabicName": "الكهف",
+      "frenchName": "La Caverne",
+      "englishName": "Al-Kahf",
+      "verseCount": 110,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 19,
+      "arabicName": "مريم",
+      "frenchName": "Marie",
+      "englishName": "Maryam",
+      "verseCount": 98,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 20,
+      "arabicName": "طه",
+      "frenchName": "Ta-Ha",
+      "englishName": "Ta-Ha",
+      "verseCount": 135,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 21,
+      "arabicName": "الأنبياء",
+      "frenchName": "Les Prophètes",
+      "englishName": "Al-Anbiya",
+      "verseCount": 112,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 22,
+      "arabicName": "الحج",
+      "frenchName": "Le Pèlerinage",
+      "englishName": "Al-Hajj",
+      "verseCount": 78,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 23,
+      "arabicName": "المؤمنون",
+      "frenchName": "Les Croyants",
+      "englishName": "Al-Mu'minun",
+      "verseCount": 118,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 24,
+      "arabicName": "النور",
+      "frenchName": "La Lumière",
+      "englishName": "An-Nur",
+      "verseCount": 64,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 25,
+      "arabicName": "الفرقان",
+      "frenchName": "Le Discernement",
+      "englishName": "Al-Furqan",
+      "verseCount": 77,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 26,
+      "arabicName": "الشعراء",
+      "frenchName": "Les Poètes",
+      "englishName": "Ash-Shu'ara",
+      "verseCount": 227,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 27,
+      "arabicName": "النمل",
+      "frenchName": "Les Fourmis",
+      "englishName": "An-Naml",
+      "verseCount": 93,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 28,
+      "arabicName": "القصص",
+      "frenchName": "Les Récits",
+      "englishName": "Al-Qasas",
+      "verseCount": 88,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 29,
+      "arabicName": "العنكبوت",
+      "frenchName": "L'Araignée",
+      "englishName": "Al-'Ankabut",
+      "verseCount": 69,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 30,
+      "arabicName": "الروم",
+      "frenchName": "Les Romains",
+      "englishName": "Ar-Rum",
+      "verseCount": 60,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 31,
+      "arabicName": "لقمان",
+      "frenchName": "Luqman",
+      "englishName": "Luqman",
+      "verseCount": 34,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 32,
+      "arabicName": "السجدة",
+      "frenchName": "La Prosternation",
+      "englishName": "As-Sajda",
+      "verseCount": 30,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 33,
+      "arabicName": "الأحزاب",
+      "frenchName": "Les Coalisés",
+      "englishName": "Al-Ahzab",
+      "verseCount": 73,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 34,
+      "arabicName": "سبأ",
+      "frenchName": "Saba",
+      "englishName": "Saba",
+      "verseCount": 54,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 35,
+      "arabicName": "فاطر",
+      "frenchName": "Le Créateur",
+      "englishName": "Fatir",
+      "verseCount": 45,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 36,
+      "arabicName": "يس",
+      "frenchName": "Ya-Sin",
+      "englishName": "Ya-Sin",
+      "verseCount": 83,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "يس",
+          "french": "Ya-Sin.",
+          "english": "Ya, Seen."
+        },
+        {
+          "arabic": "وَالْقُرْآنِ الْحَكِيمِ",
+          "french": "Par le Coran plein de sagesse,",
+          "english": "By the wise Quran."
+        },
+        {
+          "arabic": "إِنَّكَ لَمِنَ الْمُرْسَلِينَ",
+          "french": "Tu es vraiment au nombre des messagers,",
+          "english": "Indeed you, [O Muhammad], are of the messengers."
+        },
+        {
+          "arabic": "عَلَى صِرَاطٍ مُسْتَقِيمٍ",
+          "french": "sur la voie droite,",
+          "english": "On a straight path."
+        },
+        {
+          "arabic": "تَنزِيلَ الْعَزِيزِ الرَّحِيمِ",
+          "french": "[c'est] la révélation du Puissant, du Miséricordieux,",
+          "english": "[This is] a revelation of the Exalted in Might, the Merciful."
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "arabicName": "الصافات",
+      "frenchName": "Les Rangs",
+      "englishName": "As-Saffat",
+      "verseCount": 182,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 38,
+      "arabicName": "ص",
+      "frenchName": "Sad",
+      "englishName": "Sad",
+      "verseCount": 88,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 39,
+      "arabicName": "الزمر",
+      "frenchName": "Les Groupes",
+      "englishName": "Az-Zumar",
+      "verseCount": 75,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 40,
+      "arabicName": "غافر",
+      "frenchName": "Le Pardonneur",
+      "englishName": "Ghafir",
+      "verseCount": 85,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 41,
+      "arabicName": "فصلت",
+      "frenchName": "Expliquées",
+      "englishName": "Fussilat",
+      "verseCount": 54,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 42,
+      "arabicName": "الشورى",
+      "frenchName": "La Consultation",
+      "englishName": "Ash-Shura",
+      "verseCount": 53,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 43,
+      "arabicName": "الزخرف",
+      "frenchName": "Les Ornements",
+      "englishName": "Az-Zukhruf",
+      "verseCount": 89,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 44,
+      "arabicName": "الدخان",
+      "frenchName": "La Fumée",
+      "englishName": "Ad-Dukhan",
+      "verseCount": 59,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 45,
+      "arabicName": "الجاثية",
+      "frenchName": "L'Agenouillée",
+      "englishName": "Al-Jathiya",
+      "verseCount": 37,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 46,
+      "arabicName": "الأحقاف",
+      "frenchName": "Les Dunes",
+      "englishName": "Al-Ahqaf",
+      "verseCount": 35,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 47,
+      "arabicName": "محمد",
+      "frenchName": "Muhammad",
+      "englishName": "Muhammad",
+      "verseCount": 38,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 48,
+      "arabicName": "الفتح",
+      "frenchName": "La Victoire",
+      "englishName": "Al-Fath",
+      "verseCount": 29,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 49,
+      "arabicName": "الحجرات",
+      "frenchName": "Les Appartements",
+      "englishName": "Al-Hujurat",
+      "verseCount": 18,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 50,
+      "arabicName": "ق",
+      "frenchName": "Qaf",
+      "englishName": "Qaf",
+      "verseCount": 45,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 51,
+      "arabicName": "الذاريات",
+      "frenchName": "Les Vents dispersants",
+      "englishName": "Adh-Dhariyat",
+      "verseCount": 60,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 52,
+      "arabicName": "الطور",
+      "frenchName": "Le Mont Sinaï",
+      "englishName": "At-Tur",
+      "verseCount": 49,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 53,
+      "arabicName": "النجم",
+      "frenchName": "L'Étoile",
+      "englishName": "An-Najm",
+      "verseCount": 62,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 54,
+      "arabicName": "القمر",
+      "frenchName": "La Lune",
+      "englishName": "Al-Qamar",
+      "verseCount": 55,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 55,
+      "arabicName": "الرحمن",
+      "frenchName": "Le Tout-Miséricordieux",
+      "englishName": "Ar-Rahman",
+      "verseCount": 78,
+      "revelationType": "Médinoise",
+      "verses": [
+        {
+          "arabic": "الرَّحْمَنُ",
+          "french": "Le Tout-Miséricordieux.",
+          "english": "The Most Merciful."
+        },
+        {
+          "arabic": "عَلَّمَ الْقُرْآنَ",
+          "french": "Il a enseigné le Coran.",
+          "english": "Taught the Quran."
+        },
+        {
+          "arabic": "خَلَقَ الْإِنسَانَ",
+          "french": "Il a créé l'homme.",
+          "english": "Created man."
+        },
+        {
+          "arabic": "عَلَّمَهُ الْبَيَانَ",
+          "french": "Il lui a appris à s'exprimer clairement.",
+          "english": "[And] taught him eloquence."
+        },
+        {
+          "arabic": "الشَّمْسُ وَالْقَمَرُ بِحُسْبَانٍ",
+          "french": "Le soleil et la lune [suivent] un cours calculé.",
+          "english": "The sun and the moon run on a fixed course."
+        },
+        {
+          "arabic": "وَالنَّجْمُ وَالشَّجَرُ يَسْجُدَانِ",
+          "french": "Et l'herbe et les arbres se prosternent.",
+          "english": "And the stars and trees prostrate."
+        },
+        {
+          "arabic": "وَالسَّمَاءَ رَفَعَهَا وَوَضَعَ الْمِيزَانَ",
+          "french": "Il a élevé le ciel et établi la balance.",
+          "english": "And the heaven He raised and imposed the balance."
+        },
+        {
+          "arabic": "أَلَّا تَطْغَوْا فِي الْمِيزَانِ",
+          "french": "Pour que vous ne transgressiez pas dans la balance.",
+          "english": "That you not transgress within the balance."
+        },
+        {
+          "arabic": "وَأَقِيمُوا الْوَزْنَ بِالْقِسْطِ وَلَا تُخْسِرُوا الْمِيزَانَ",
+          "french": "Établissez la pesée en toute équité et ne lésinez pas sur la balance.",
+          "english": "And establish weight in justice and do not make deficient the balance."
+        },
+        {
+          "arabic": "وَالْأَرْضَ وَضَعَهَا لِلْأَنَامِ",
+          "french": "Et la terre, Il l'a disposée pour les créatures.",
+          "english": "And the earth He laid [out] for the creatures."
+        },
+        {
+          "arabic": "فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ",
+          "french": "Alors, lequel des bienfaits de votre Seigneur niez-vous tous les deux?",
+          "english": "So which of the favors of your Lord would you deny?"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "arabicName": "الواقعة",
+      "frenchName": "L'Événement",
+      "englishName": "Al-Waqi'a",
+      "verseCount": 96,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 57,
+      "arabicName": "الحديد",
+      "frenchName": "Le Fer",
+      "englishName": "Al-Hadid",
+      "verseCount": 29,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 58,
+      "arabicName": "المجادلة",
+      "frenchName": "La Discussion",
+      "englishName": "Al-Mujadila",
+      "verseCount": 22,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 59,
+      "arabicName": "الحشر",
+      "frenchName": "Le Rassemblement",
+      "englishName": "Al-Hashr",
+      "verseCount": 24,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 60,
+      "arabicName": "الممتحنة",
+      "frenchName": "L'Éprouvée",
+      "englishName": "Al-Mumtahana",
+      "verseCount": 13,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 61,
+      "arabicName": "الصف",
+      "frenchName": "Le Rang",
+      "englishName": "As-Saf",
+      "verseCount": 14,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 62,
+      "arabicName": "الجمعة",
+      "frenchName": "Le Vendredi",
+      "englishName": "Al-Jumu'a",
+      "verseCount": 11,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 63,
+      "arabicName": "المنافقون",
+      "frenchName": "Les Hypocrites",
+      "englishName": "Al-Munafiqun",
+      "verseCount": 11,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 64,
+      "arabicName": "التغابن",
+      "frenchName": "La Tricherie mutuelle",
+      "englishName": "At-Taghabun",
+      "verseCount": 18,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 65,
+      "arabicName": "الطلاق",
+      "frenchName": "Le Divorce",
+      "englishName": "At-Talaq",
+      "verseCount": 12,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 66,
+      "arabicName": "التحريم",
+      "frenchName": "L'Interdiction",
+      "englishName": "At-Tahrim",
+      "verseCount": 12,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 67,
+      "arabicName": "الملك",
+      "frenchName": "La Royauté",
+      "englishName": "Al-Mulk",
+      "verseCount": 30,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+          "french": "Béni soit Celui qui détient la Royauté. Il est Omnipotent.",
+          "english": "Blessed is He in whose hand is dominion, and He is over all things competent."
+        },
+        {
+          "arabic": "الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا",
+          "french": "Celui qui a créé la mort et la vie afin de vous éprouver et de savoir qui de vous est le meilleur en œuvres.",
+          "english": "[He] who created death and life to test you [as to] which of you is best in deed."
+        },
+        {
+          "arabic": "وَهُوَ الْعَزِيزُ الْغَفُورُ",
+          "french": "Il est le Puissant, le Très Pardonneur.",
+          "english": "And He is the Exalted in Might, the Forgiving."
+        },
+        {
+          "arabic": "الَّذِي خَلَقَ سَبْعَ سَمَاوَاتٍ طِبَاقًا",
+          "french": "Celui qui a créé sept cieux superposés.",
+          "english": "[And] who created seven heavens in layers."
+        },
+        {
+          "arabic": "مَا تَرَى فِي خَلْقِ الرَّحْمَنِ مِن تَفَاوُتٍ",
+          "french": "Tu ne vois aucune disparité dans la création du Tout-Miséricordieux.",
+          "english": "You do not see in the creation of the Most Merciful any inconsistency."
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "arabicName": "القلم",
+      "frenchName": "Le Calame",
+      "englishName": "Al-Qalam",
+      "verseCount": 52,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 69,
+      "arabicName": "الحاقة",
+      "frenchName": "L'Inévitable",
+      "englishName": "Al-Haqqa",
+      "verseCount": 52,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 70,
+      "arabicName": "المعارج",
+      "frenchName": "Les Voies d'ascension",
+      "englishName": "Al-Ma'arij",
+      "verseCount": 44,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 71,
+      "arabicName": "نوح",
+      "frenchName": "Noé",
+      "englishName": "Nuh",
+      "verseCount": 28,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 72,
+      "arabicName": "الجن",
+      "frenchName": "Les Djinns",
+      "englishName": "Al-Jinn",
+      "verseCount": 28,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 73,
+      "arabicName": "المزمل",
+      "frenchName": "L'Enveloppé",
+      "englishName": "Al-Muzzammil",
+      "verseCount": 20,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 74,
+      "arabicName": "المدثر",
+      "frenchName": "Le Revêtu d'un manteau",
+      "englishName": "Al-Muddaththir",
+      "verseCount": 56,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 75,
+      "arabicName": "القيامة",
+      "frenchName": "La Résurrection",
+      "englishName": "Al-Qiyama",
+      "verseCount": 40,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 76,
+      "arabicName": "الإنسان",
+      "frenchName": "L'Homme",
+      "englishName": "Al-Insan",
+      "verseCount": 31,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 77,
+      "arabicName": "المرسلات",
+      "frenchName": "Les Envoyés",
+      "englishName": "Al-Mursalat",
+      "verseCount": 50,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 78,
+      "arabicName": "النبأ",
+      "frenchName": "La Nouvelle",
+      "englishName": "An-Naba",
+      "verseCount": 40,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 79,
+      "arabicName": "النازعات",
+      "frenchName": "Ceux qui arrachent",
+      "englishName": "An-Nazi'at",
+      "verseCount": 46,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 80,
+      "arabicName": "عبس",
+      "frenchName": "Il fronça les sourcils",
+      "englishName": "'Abasa",
+      "verseCount": 42,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 81,
+      "arabicName": "التكوير",
+      "frenchName": "L'Enroulement",
+      "englishName": "At-Takwir",
+      "verseCount": 29,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 82,
+      "arabicName": "الانفطار",
+      "frenchName": "La Déchirure",
+      "englishName": "Al-Infitar",
+      "verseCount": 19,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 83,
+      "arabicName": "المطففين",
+      "frenchName": "Les Fraudeurs",
+      "englishName": "Al-Mutaffifin",
+      "verseCount": 36,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 84,
+      "arabicName": "الانشقاق",
+      "frenchName": "La Fissure",
+      "englishName": "Al-Inshiqaq",
+      "verseCount": 25,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 85,
+      "arabicName": "البروج",
+      "frenchName": "Les Constellations",
+      "englishName": "Al-Buruj",
+      "verseCount": 22,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 86,
+      "arabicName": "الطارق",
+      "frenchName": "L'Astre nocturne",
+      "englishName": "At-Tariq",
+      "verseCount": 17,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 87,
+      "arabicName": "الأعلى",
+      "frenchName": "Le Très-Haut",
+      "englishName": "Al-A'la",
+      "verseCount": 19,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 88,
+      "arabicName": "الغاشية",
+      "frenchName": "L'Enveloppante",
+      "englishName": "Al-Ghashiya",
+      "verseCount": 26,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 89,
+      "arabicName": "الفجر",
+      "frenchName": "L'Aube",
+      "englishName": "Al-Fajr",
+      "verseCount": 30,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 90,
+      "arabicName": "البلد",
+      "frenchName": "La Cité",
+      "englishName": "Al-Balad",
+      "verseCount": 20,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 91,
+      "arabicName": "الشمس",
+      "frenchName": "Le Soleil",
+      "englishName": "Ash-Shams",
+      "verseCount": 15,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 92,
+      "arabicName": "الليل",
+      "frenchName": "La Nuit",
+      "englishName": "Al-Layl",
+      "verseCount": 21,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 93,
+      "arabicName": "الضحى",
+      "frenchName": "La Matinée",
+      "englishName": "Ad-Duha",
+      "verseCount": 11,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 94,
+      "arabicName": "الشرح",
+      "frenchName": "L'Ouverture",
+      "englishName": "Ash-Sharh",
+      "verseCount": 8,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 95,
+      "arabicName": "التين",
+      "frenchName": "Le Figuier",
+      "englishName": "At-Tin",
+      "verseCount": 8,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 96,
+      "arabicName": "العلق",
+      "frenchName": "L'Adhérence",
+      "englishName": "Al-'Alaq",
+      "verseCount": 19,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",
+          "french": "Lis, au nom de ton Seigneur qui a créé,",
+          "english": "Recite in the name of your Lord who created."
+        },
+        {
+          "arabic": "خَلَقَ الْإِنسَانَ مِنْ عَلَقٍ",
+          "french": "qui a créé l'homme d'une adhérence.",
+          "english": "Created man from a clinging substance."
+        },
+        {
+          "arabic": "اقْرَأْ وَرَبُّكَ الْأَكْرَمُ",
+          "french": "Lis! Ton Seigneur est le Très Noble,",
+          "english": "Recite, and your Lord is the most Generous."
+        },
+        {
+          "arabic": "الَّذِي عَلَّمَ بِالْقَلَمِ",
+          "french": "qui a enseigné par le calame,",
+          "english": "Who taught by the pen."
+        },
+        {
+          "arabic": "عَلَّمَ الْإِنسَانَ مَا لَمْ يَعْلَمْ",
+          "french": "a enseigné à l'homme ce qu'il ne savait pas.",
+          "english": "Taught man that which he knew not."
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "arabicName": "القدر",
+      "frenchName": "La Nuit du Destin",
+      "englishName": "Al-Qadr",
+      "verseCount": 5,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ",
+          "french": "Nous l'avons certes révélé pendant la nuit d'Al-Qadr.",
+          "english": "Indeed, We sent it down during the Night of Decree."
+        },
+        {
+          "arabic": "وَمَا أَدْرَاكَ مَا لَيْلَةُ الْقَدْرِ",
+          "french": "Et comment sauras-tu ce qu'est la nuit d'Al-Qadr?",
+          "english": "And what can make you know what is the Night of Decree?"
+        },
+        {
+          "arabic": "لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ",
+          "french": "La nuit d'Al-Qadr est meilleure que mille mois.",
+          "english": "The Night of Decree is better than a thousand months."
+        },
+        {
+          "arabic": "تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍ",
+          "french": "Les anges et l'Esprit y descendent, par permission de leur Seigneur, pour tout ordre.",
+          "english": "The angels and the Spirit descend therein by permission of their Lord for every matter."
+        },
+        {
+          "arabic": "سَلَامٌ هِيَ حَتَّى مَطْلَعِ الْفَجْرِ",
+          "french": "Elle est paix et salut jusqu'à l'apparition de l'aube.",
+          "english": "Peace it is until the emergence of dawn."
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "arabicName": "البينة",
+      "frenchName": "La Preuve",
+      "englishName": "Al-Bayyina",
+      "verseCount": 8,
+      "revelationType": "Médinoise",
+      "verses": []
+    },
+    {
+      "id": 99,
+      "arabicName": "الزلزلة",
+      "frenchName": "Le Séisme",
+      "englishName": "Az-Zalzala",
+      "verseCount": 8,
+      "revelationType": "Médinoise",
+      "verses": [
+        {
+          "arabic": "إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا",
+          "french": "Quand la terre sera secouée d'un violent séisme,",
+          "english": "When the earth is shaken with its [final] earthquake,"
+        },
+        {
+          "arabic": "وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا",
+          "french": "et que la terre évacuera ses fardeaux,",
+          "english": "And the earth discharges its burdens,"
+        },
+        {
+          "arabic": "وَقَالَ الْإِنسَانُ مَا لَهَا",
+          "french": "et que l'homme dira: «Qu'a-t-elle?»",
+          "english": "And man says, 'What is [wrong] with it?'"
+        },
+        {
+          "arabic": "يَوْمَئِذٍ تُحَدِّثُ أَخْبَارَهَا",
+          "french": "ce Jour-là, elle contera son histoire,",
+          "english": "That Day, it will report its news."
+        },
+        {
+          "arabic": "بِأَنَّ رَبَّكَ أَوْحَى لَهَا",
+          "french": "parce que ton Seigneur lui en aura donné l'inspiration.",
+          "english": "Because your Lord has commanded it."
+        },
+        {
+          "arabic": "يَوْمَئِذٍ يَصْدُرُ النَّاسُ أَشْتَاتًا لِّيُرَوْا أَعْمَالَهُمْ",
+          "french": "Ce Jour-là, les gens sortiront en groupes distincts pour qu'on leur montre leurs œuvres.",
+          "english": "That Day, the people will depart separated to be shown [the result of] their deeds."
+        },
+        {
+          "arabic": "فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ",
+          "french": "Celui qui aura fait le bien, fût-ce du poids d'un atome, le verra.",
+          "english": "So whoever does an atom's weight of good will see it,"
+        },
+        {
+          "arabic": "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ شَرًّا يَرَهُ",
+          "french": "Et celui qui aura fait le mal, fût-ce du poids d'un atome, le verra.",
+          "english": "And whoever does an atom's weight of evil will see it."
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "arabicName": "العاديات",
+      "frenchName": "Les Coursiers",
+      "englishName": "Al-'Adiyat",
+      "verseCount": 11,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 101,
+      "arabicName": "القارعة",
+      "frenchName": "La Fracassante",
+      "englishName": "Al-Qari'a",
+      "verseCount": 11,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 102,
+      "arabicName": "التكاثر",
+      "frenchName": "La Course aux richesses",
+      "englishName": "At-Takathur",
+      "verseCount": 8,
+      "revelationType": "Mecquoise",
+      "verses": []
+    },
+    {
+      "id": 103,
+      "arabicName": "العصر",
+      "frenchName": "Le Temps",
+      "englishName": "Al-'Asr",
+      "verseCount": 3,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "وَالْعَصْرِ",
+          "french": "Par le Temps!",
+          "english": "By time,"
+        },
+        {
+          "arabic": "إِنَّ الْإِنسَانَ لَفِي خُسْرٍ",
+          "french": "L'homme est certes en perdition,",
+          "english": "Indeed, mankind is in loss,"
+        },
+        {
+          "arabic": "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ",
+          "french": "sauf ceux qui croient et accomplissent les bonnes œuvres, s'enjoignent mutuellement la vérité et s'enjoignent mutuellement l'endurance.",
+          "english": "Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience."
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "arabicName": "الهمزة",
+      "frenchName": "Le Calomniateur",
+      "englishName": "Al-Humaza",
+      "verseCount": 9,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ",
+          "french": "Malheur à tout calomniateur, à tout contempteur!",
+          "english": "Woe to every scorner and mocker,"
+        },
+        {
+          "arabic": "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ",
+          "french": "à celui qui amasse des richesses et les compte,",
+          "english": "Who collects wealth and [continuously] counts it."
+        },
+        {
+          "arabic": "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ",
+          "french": "croyant que ses richesses le rendront immortel.",
+          "english": "He thinks that his wealth will make him immortal."
+        },
+        {
+          "arabic": "كَلَّا لَيُنبَذَنَّ فِي الْحُطَمَةِ",
+          "french": "Mais non! Il sera précipité dans la Hutama.",
+          "english": "No! He will surely be thrown into the Crusher."
+        },
+        {
+          "arabic": "وَمَا أَدْرَاكَ مَا الْحُطَمَةُ",
+          "french": "Et comment sauras-tu ce qu'est la Hutama?",
+          "english": "And what can make you know what is the Crusher?"
+        },
+        {
+          "arabic": "نَارُ اللَّهِ الْمُوقَدَةُ",
+          "french": "C'est le feu allumé d'Allah,",
+          "english": "It is the fire of Allah, [eternally] fueled,"
+        },
+        {
+          "arabic": "الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ",
+          "french": "qui s'élève jusqu'aux cœurs.",
+          "english": "Which mounts directed at the hearts."
+        },
+        {
+          "arabic": "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ",
+          "french": "Certes, [ce feu] se referme sur eux,",
+          "english": "Indeed, it [the fire] will be closed down upon them,"
+        },
+        {
+          "arabic": "فِي عَمَدٍ مُّمَدَّدَةٍ",
+          "french": "en colonnes interminables.",
+          "english": "In extended columns."
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "arabicName": "الفيل",
+      "frenchName": "L'Éléphant",
+      "englishName": "Al-Fil",
+      "verseCount": 5,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ",
+          "french": "N'as-tu pas vu comment ton Seigneur a agi envers les gens de l'Éléphant?",
+          "english": "Have you not considered how your Lord dealt with the companions of the elephant?"
+        },
+        {
+          "arabic": "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ",
+          "french": "N'a-t-Il pas rendu vaine leur ruse?",
+          "english": "Did He not make their plan into misguidance?"
+        },
+        {
+          "arabic": "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ",
+          "french": "Il envoya contre eux des oiseaux par volées,",
+          "english": "And He sent against them birds in flocks,"
+        },
+        {
+          "arabic": "تَرْمِيهِم بِحِجَارَةٍ مِّن سِجِّيلٍ",
+          "french": "qui leur lançaient des pierres d'argile cuite,",
+          "english": "Striking them with stones of hard clay,"
+        },
+        {
+          "arabic": "فَجَعَلَهُمْ كَعَصْفٍ مَّأْكُولٍ",
+          "french": "et Il les rendit semblables à des feuilles dévorées.",
+          "english": "And He made them like eaten straw."
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "arabicName": "قريش",
+      "frenchName": "Quraïch",
+      "englishName": "Quraysh",
+      "verseCount": 4,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "لِإِيلَافِ قُرَيْشٍ",
+          "french": "Pour la protection de Quraïch,",
+          "english": "For the accustomed security of the Quraysh,"
+        },
+        {
+          "arabic": "إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ",
+          "french": "leur protection lors du voyage d'hiver et de l'été,",
+          "english": "Their accustomed security [in] the caravan of winter and summer."
+        },
+        {
+          "arabic": "فَلْيَعْبُدُوا رَبَّ هَذَا الْبَيْتِ",
+          "french": "qu'ils adorent donc le Seigneur de cette Maison,",
+          "english": "Let them worship the Lord of this House,"
+        },
+        {
+          "arabic": "الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ",
+          "french": "qui les a nourris contre la faim et mis en sécurité contre la crainte.",
+          "english": "Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear."
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "arabicName": "الماعون",
+      "frenchName": "L'Ustensile",
+      "englishName": "Al-Ma'un",
+      "verseCount": 7,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ",
+          "french": "As-tu vu celui qui traite la religion de mensonge?",
+          "english": "Have you seen the one who denies the Recompense?"
+        },
+        {
+          "arabic": "فَذَلِكَ الَّذِي يَدُعُّ الْيَتِيمَ",
+          "french": "C'est celui qui repousse l'orphelin,",
+          "english": "For that is the one who drives away the orphan,"
+        },
+        {
+          "arabic": "وَلَا يَحُضُّ عَلَى طَعَامِ الْمِسْكِينِ",
+          "french": "et qui n'encourage pas à nourrir le pauvre.",
+          "english": "And does not encourage the feeding of the poor."
+        },
+        {
+          "arabic": "فَوَيْلٌ لِّلْمُصَلِّينَ",
+          "french": "Malheur donc à ceux qui prient,",
+          "english": "So woe to those who pray,"
+        },
+        {
+          "arabic": "الَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ",
+          "french": "mais qui sont distraits dans leur prière,",
+          "english": "[But] who are heedless of their prayer,"
+        },
+        {
+          "arabic": "الَّذِينَ هُمْ يُرَاؤُونَ",
+          "french": "qui font montre (de leurs actes),",
+          "english": "Those who make show [of their deeds],"
+        },
+        {
+          "arabic": "وَيَمْنَعُونَ الْمَاعُونَ",
+          "french": "et refusent l'aide de première nécessité.",
+          "english": "And withhold [simple] assistance."
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "arabicName": "الكوثر",
+      "frenchName": "L'Abondance",
+      "englishName": "Al-Kawthar",
+      "verseCount": 3,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",
+          "french": "Nous t'avons accordé l'Abondance.",
+          "english": "Indeed, We have granted you, [O Muhammad], al-Kawthar."
+        },
+        {
+          "arabic": "فَصَلِّ لِرَبِّكَ وَانْحَرْ",
+          "french": "Accomplis donc la Salât pour ton Seigneur et sacrifie.",
+          "english": "So pray to your Lord and sacrifice [to Him alone]."
+        },
+        {
+          "arabic": "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ",
+          "french": "Certes, c'est ton ennemi qui est sans postérité.",
+          "english": "Indeed, your enemy is the one cut off."
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "arabicName": "الكافرون",
+      "frenchName": "Les Mécréants",
+      "englishName": "Al-Kafirun",
+      "verseCount": 6,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "قُلْ يَا أَيُّهَا الْكَافِرُونَ",
+          "french": "Dis: «Ô vous les mécréants!»",
+          "english": "Say, 'O disbelievers,"
+        },
+        {
+          "arabic": "لَا أَعْبُدُ مَا تَعْبُدُونَ",
+          "french": "«Je n'adore pas ce que vous adorez,»",
+          "english": "I do not worship what you worship."
+        },
+        {
+          "arabic": "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ",
+          "french": "«et vous n'êtes pas adorateurs de ce que j'adore,»",
+          "english": "Nor are you worshippers of what I worship."
+        },
+        {
+          "arabic": "وَلَا أَنَا عَابِدٌ مَّا عَبَدتُّمْ",
+          "french": "«et je ne suis pas adorateur de ce que vous avez adoré,»",
+          "english": "Nor will I be a worshipper of what you worship."
+        },
+        {
+          "arabic": "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ",
+          "french": "«et vous n'êtes pas adorateurs de ce que j'adore.»",
+          "english": "Nor will you be worshippers of what I worship."
+        },
+        {
+          "arabic": "لَكُمْ دِينُكُمْ وَلِيَ دِينِ",
+          "french": "«À vous votre religion, et à moi ma religion!»",
+          "english": "For you is your religion, and for me is my religion.'"
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "arabicName": "النصر",
+      "frenchName": "Le Secours",
+      "englishName": "An-Nasr",
+      "verseCount": 3,
+      "revelationType": "Médinoise",
+      "verses": [
+        {
+          "arabic": "إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ",
+          "french": "Quand vient le secours d'Allah et la victoire,",
+          "english": "When the victory of Allah has come and the conquest,"
+        },
+        {
+          "arabic": "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا",
+          "french": "et que tu vois les gens entrer en foule dans la religion d'Allah,",
+          "english": "And you see the people entering into the religion of Allah in multitudes,"
+        },
+        {
+          "arabic": "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ إِنَّهُ كَانَ تَوَّابًا",
+          "french": "célèbre les louanges de ton Seigneur et implore Son pardon. Il est Grand Accueillant au repentir.",
+          "english": "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of repentance."
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "arabicName": "المسد",
+      "frenchName": "Les Fibres",
+      "englishName": "Al-Masad",
+      "verseCount": 5,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ",
+          "french": "Périssent les deux mains d'Abou Lahab et qu'il périsse lui-même!",
+          "english": "May the hands of Abu Lahab be ruined, and ruined is he."
+        },
+        {
+          "arabic": "مَا أَغْنَى عَنْهُ مَالُهُ وَمَا كَسَبَ",
+          "french": "Sa fortune et ce qu'il a acquis ne lui serviront à rien.",
+          "english": "His wealth will not avail him or that which he gained."
+        },
+        {
+          "arabic": "سَيَصْلَى نَارًا ذَاتَ لَهَبٍ",
+          "french": "Il brûlera dans un Feu plein de flammes,",
+          "english": "He will [enter to] burn in a Fire of [blazing] flame."
+        },
+        {
+          "arabic": "وَامْرَأَتُهُ حَمَّالَةَ الْحَطَبِ",
+          "french": "ainsi que sa femme, la porteuse de bois,",
+          "english": "And his wife [as well] - the carrier of firewood."
+        },
+        {
+          "arabic": "فِي جِيدِهَا حَبْلٌ مِّن مَّسَدٍ",
+          "french": "avec au cou une corde de fibres de palmier.",
+          "english": "Around her neck is a rope of [twisted] fiber."
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "arabicName": "الإخلاص",
+      "frenchName": "Le Monothéisme pur",
+      "englishName": "Al-Ikhlas",
+      "verseCount": 4,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+          "french": "Dis: «Il est Allah, Unique»",
+          "english": "Say, 'He is Allah, [who is] One,"
+        },
+        {
+          "arabic": "اللَّهُ الصَّمَدُ",
+          "french": "«Allah, le Seul à être imploré pour ce que nous désirons»",
+          "english": "Allah, the Eternal Refuge."
+        },
+        {
+          "arabic": "لَمْ يَلِدْ وَلَمْ يُولَدْ",
+          "french": "«Il n'a jamais engendré, n'a pas été engendré non plus»",
+          "english": "He neither begets nor is born,"
+        },
+        {
+          "arabic": "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+          "french": "«Et nul n'est égal à Lui»",
+          "english": "Nor is there to Him any equivalent.'"
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "arabicName": "الفلق",
+      "frenchName": "L'Aube naissante",
+      "englishName": "Al-Falaq",
+      "verseCount": 5,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+          "french": "Dis: «Je cherche protection auprès du Seigneur de l'aube naissante,»",
+          "english": "Say, 'I seek refuge in the Lord of daybreak,"
+        },
+        {
+          "arabic": "مِن شَرِّ مَا خَلَقَ",
+          "french": "«contre le mal de ce qu'Il a créé,»",
+          "english": "From the evil of that which He created,"
+        },
+        {
+          "arabic": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+          "french": "«contre le mal de l'obscurité quand elle s'étend,»",
+          "english": "And from the evil of darkness when it settles,"
+        },
+        {
+          "arabic": "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ",
+          "french": "«contre le mal de celles qui soufflent sur les nœuds,»",
+          "english": "And from the evil of the blowers in knots,"
+        },
+        {
+          "arabic": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+          "french": "«et contre le mal de l'envieux quand il envie.»",
+          "english": "And from the evil of an envier when he envies.'"
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "arabicName": "الناس",
+      "frenchName": "Les Hommes",
+      "englishName": "An-Nas",
+      "verseCount": 6,
+      "revelationType": "Mecquoise",
+      "verses": [
+        {
+          "arabic": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
+          "french": "Dis: «Je cherche protection auprès du Seigneur des hommes,»",
+          "english": "Say, 'I seek refuge in the Lord of mankind,"
+        },
+        {
+          "arabic": "مَلِكِ النَّاسِ",
+          "french": "«du Roi des hommes,»",
+          "english": "The Sovereign of mankind,"
+        },
+        {
+          "arabic": "إِلَهِ النَّاسِ",
+          "french": "«du Dieu des hommes,»",
+          "english": "The God of mankind,"
+        },
+        {
+          "arabic": "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ",
+          "french": "«contre le mal du mauvais conseiller qui se retire,»",
+          "english": "From the evil of the retreating whisperer,"
+        },
+        {
+          "arabic": "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ",
+          "french": "«qui souffle le mal dans les poitrines des hommes,»",
+          "english": "Who whispers [evil] into the breasts of mankind,"
+        },
+        {
+          "arabic": "مِنَ الْجِنَّةِ وَالنَّاسِ",
+          "french": "«qu'il soit djinn ou homme.»",
+          "english": "From among the jinn and mankind.'"
+        }
+      ]
+    }
+  ]
+}

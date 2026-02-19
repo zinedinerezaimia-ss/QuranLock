@@ -34,6 +34,7 @@ struct Duaa: Identifiable {
         case pardon = "Pardon"
         case quotidien = "Quotidien"
         case ramadan = "Ramadan"
+        case prophete = "Prophète ﷺ"
         
         var icon: String {
             switch self {
@@ -44,6 +45,7 @@ struct Duaa: Identifiable {
             case .pardon: return "🤲"
             case .quotidien: return "📅"
             case .ramadan: return "🌙"
+            case .prophete: return "💚"
             }
         }
     }
