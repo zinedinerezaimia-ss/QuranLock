@@ -1,20 +1,24 @@
 name: QuranLock
+
 options:
   bundleIdPrefix: com.rezaimia
   deploymentTarget:
     iOS: "16.0"
   xcodeVersion: "15.0"
   generateEmptyDirectories: true
+
 settings:
   base:
     SWIFT_VERSION: "5.9"
     CODE_SIGNING_ALLOWED: "NO"
     CODE_SIGNING_REQUIRED: "NO"
     CODE_SIGN_IDENTITY: ""
+
 packages:
   Firebase:
     url: https://github.com/firebase/firebase-ios-sdk
     from: "10.0.0"
+
 targets:
   QuranLock:
     type: application
