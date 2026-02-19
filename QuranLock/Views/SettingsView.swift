@@ -118,8 +118,7 @@ struct SettingsView: View {
                                 .foregroundColor(Theme.gold)
                             
                             InfoRow(icon: "app.badge", label: "Version", value: "1.0.0")
-                            InfoRow(icon: "building.2", label: "Développeur", value: "ZETA Entreprise")
-                            InfoRow(icon: "heart.fill", label: "Fait avec", value: "Amour & Taqwa")
+                            InfoRow(icon: "building.2", label: "Développeur", value: "Swift")
                         }
                         .cardStyle()
                         
