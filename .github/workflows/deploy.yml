@@ -12,9 +12,32 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_16.1.app/Contents/Developer
+
+    - name: Install xcodegen
+      run: brew install xcodegen
+
+    - name: Generate Xcode project
+      run: xcodegen generate
+
+    - name: Disable SPM codesigning
       run: |
-        sudo xcode-select -s /Applications/Xcode_16.1.app/Contents/Developer
-        xcodebuild -version
+        sed -i '' 's/PROVISIONING_PROFILE_SPECIFIER = "QuranLock AppStore";/PROVISIONING_PROFILE_SPECIFIER = "QuranLock AppStore"; CODE_SIGNING_ALLOWED = NO;/g' QuranLock.xcodeproj/project.pbxproj || true
+        python3 << 'PYEOF'
+        content = open("QuranLock.xcodeproj/project.pbxproj").read()
+        # For every buildSettings block that does NOT contain com.rezaimia, disable signing
+        import re
+        def patch_block(m):
+            block = m.group(0)
+            if "com.rezaimia" in block:
+                return block
+            if "CODE_SIGNING_ALLOWED" not in block:
+                block = block.rstrip("};").rstrip() + "\n\t\t\t\tCODE_SIGNING_ALLOWED = NO;\n\t\t\t\tCODE_SIGNING_REQUIRED = NO;\n\t\t\t\tCODE_SIGN_IDENTITY = \"\";\n\t\t\t\tPROVISIONING_PROFILE_SPECIFIER = \"\";\n\t\t\t};"
+            return block
+        patched = re.sub(r'buildSettings = \{[^}]*\}', patch_block, content, flags=re.DOTALL)
+        open("QuranLock.xcodeproj/project.pbxproj", "w").write(patched)
+        print("Done")
+        PYEOF
 
     - name: Install Ruby
       uses: ruby/setup-ruby@v1
