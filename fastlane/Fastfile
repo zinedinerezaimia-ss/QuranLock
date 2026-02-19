@@ -31,7 +31,7 @@ platform :ios do
       clean: true,
       output_directory: "./build",
       output_name: "QuranLock.ipa",
-      xcargs: "DEVELOPMENT_TEAM=J875R59LND CODE_SIGN_IDENTITY='Apple Distribution' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='QuranLock AppStore' CODE_SIGNING_ALLOWED_FOR_APPS=YES -allowProvisioningUpdates SWIFT_PACKAGE_MANAGER_DELEGATE_FOR_CODESIGNING=NO"
+      xcargs: "DEVELOPMENT_TEAM=J875R59LND CODE_SIGN_IDENTITY='Apple Distribution' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='QuranLock AppStore' -allowProvisioningUpdates PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]='QuranLock AppStore'"
     )
     upload_to_testflight(
       api_key: api_key,
