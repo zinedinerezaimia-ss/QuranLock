@@ -10,7 +10,6 @@ class AppState: ObservableObject {
     @AppStorage("lastReadDate") var lastReadDate: String = ""
     @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
     @AppStorage("ramadanModeEnabled") var ramadanModeEnabled: Bool = false
-    @AppStorage("hasanat") var hasanat: Int = 0
     @AppStorage("arabicLearningRhythm") var arabicLearningRhythm: String = ""
     @AppStorage("completedSurahsData") var completedSurahsData: String = "[]"
     @AppStorage("khatmCompletedSurahs") var khatmCompletedSurahs: String = "[]"
@@ -45,10 +44,11 @@ class AppState: ObservableObject {
 
     func markSurahCompleted(_ index: Int) {
         var current = completedSurahIndices
-        if !current.contains(index) { current.append(index); completedSurahIndices = current; addHasanat(10) }
+        if !current.contains(index) {
+            current.append(index)
+            completedSurahIndices = current
+        }
     }
-
-    func addHasanat(_ amount: Int) { hasanat += amount }
 
     func updateStreak() {
         let today = Self.dateString(from: Date())
@@ -67,7 +67,7 @@ class AppState: ObservableObject {
         userName = ""; dailyGoal = 5; pagesRead = 0; totalPagesRead = 0
         currentStreak = 0; currentSurahIndex = 0; lastReadDate = ""
         hasCompletedOnboarding = false; ramadanModeEnabled = false
-        hasanat = 0; arabicLearningRhythm = ""; khatmCompletedSurahs = "[]"
+        arabicLearningRhythm = ""; khatmCompletedSurahs = "[]"
         quizHighScore = 0; musicChallengeActive = false; musicChallengeDaysCompleted = 0
     }
 }

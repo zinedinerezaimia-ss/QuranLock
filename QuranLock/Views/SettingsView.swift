@@ -10,7 +10,6 @@ struct SettingsView: View {
         NavigationView {
             ZStack {
                 Theme.primaryBg.ignoresSafeArea()
-
                 ScrollView {
                     VStack(spacing: 16) {
 
@@ -28,9 +27,9 @@ struct SettingsView: View {
                                 .font(.title3.bold()).foregroundColor(.white)
 
                             HStack(spacing: 20) {
-                                statBlock("\(appState.hasanat)", "Hasanat", Theme.gold)
                                 statBlock("\(appState.currentStreak)", "Jours", Theme.success)
                                 statBlock("\(appState.completedSurahIndices.count)", "Sourates", Theme.accent)
+                                statBlock("\(appState.totalPagesRead)", "Pages", Theme.gold)
                             }
                         }
                         .cardStyle()
@@ -40,7 +39,6 @@ struct SettingsView: View {
                             Text("⚙️ \(L.settings)")
                                 .font(.headline).foregroundColor(Theme.gold)
 
-                            // Name
                             HStack {
                                 Image(systemName: "person.fill").foregroundColor(Theme.gold)
                                 TextField(L.yourName, text: $appState.userName)
@@ -48,7 +46,6 @@ struct SettingsView: View {
                             }
                             .padding().background(Theme.secondaryBg).cornerRadius(10)
 
-                            // Daily goal
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack {
                                     Image(systemName: "target").foregroundColor(Theme.gold)
@@ -62,7 +59,6 @@ struct SettingsView: View {
                             }
                             .padding().background(Theme.secondaryBg).cornerRadius(10)
 
-                            // Ramadan toggle
                             Toggle(isOn: $appState.ramadanModeEnabled) {
                                 HStack {
                                     Image(systemName: "moon.stars.fill").foregroundColor(Theme.ramadanGold)
@@ -78,7 +74,6 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text(L.chooseLanguage)
                                 .font(.headline).foregroundColor(Theme.gold)
-
                             HStack(spacing: 10) {
                                 ForEach(AppLanguage.allCases, id: \.rawValue) { lang in
                                     Button(action: {
@@ -102,24 +97,17 @@ struct SettingsView: View {
 
                         // MARK: - Donation
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(L.supportUs)
-                                .font(.headline).foregroundColor(Theme.gold)
-
-                            Text(L.donationMsg)
-                                .font(.subheadline)
-                                .foregroundColor(Theme.textSecondary)
+                            Text(L.supportUs).font(.headline).foregroundColor(Theme.gold)
+                            Text(L.donationMsg).font(.subheadline).foregroundColor(Theme.textSecondary)
                                 .fixedSize(horizontal: false, vertical: true)
-
                             Link(destination: URL(string: "https://buymeacoffee.com/quranlock")!) {
                                 HStack {
                                     Text("☕")
-                                    Text(L.donate)
-                                        .font(.headline)
+                                    Text(L.donate).font(.headline)
                                 }
                                 .foregroundColor(.black)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .background(Color(red: 1.0, green: 0.81, blue: 0.27)) // buymeacoffee yellow
+                                .frame(maxWidth: .infinity).padding(.vertical, 14)
+                                .background(Color(red: 1.0, green: 0.81, blue: 0.27))
                                 .cornerRadius(12)
                             }
                         }
@@ -127,8 +115,7 @@ struct SettingsView: View {
 
                         // MARK: - About
                         VStack(alignment: .leading, spacing: 12) {
-                            Text(L.about)
-                                .font(.headline).foregroundColor(Theme.gold)
+                            Text(L.about).font(.headline).foregroundColor(Theme.gold)
                             InfoRow(icon: "app.badge", label: L.version, value: "2.0.0")
                             InfoRow(icon: "building.2", label: L.developer, value: "Swift")
                         }
@@ -136,19 +123,15 @@ struct SettingsView: View {
 
                         // MARK: - Danger Zone
                         VStack(spacing: 12) {
-                            Text(L.dangerZone)
-                                .font(.headline).foregroundColor(Theme.danger)
+                            Text(L.dangerZone).font(.headline).foregroundColor(Theme.danger)
                             Button(action: { showResetAlert = true }) {
                                 HStack {
                                     Image(systemName: "trash")
                                     Text(L.resetAll)
                                 }
-                                .font(.subheadline)
-                                .foregroundColor(Theme.danger)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Theme.danger.opacity(0.1))
-                                .cornerRadius(10)
+                                .font(.subheadline).foregroundColor(Theme.danger)
+                                .frame(maxWidth: .infinity).padding()
+                                .background(Theme.danger.opacity(0.1)).cornerRadius(10)
                                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.danger.opacity(0.3), lineWidth: 1))
                             }
                         }
