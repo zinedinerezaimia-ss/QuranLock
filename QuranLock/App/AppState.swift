@@ -71,3 +71,9 @@ class AppState: ObservableObject {
         quizHighScore = 0; musicChallengeActive = false; musicChallengeDaysCompleted = 0
     }
 }
+
+extension AppState {
+    func addHasanat(_ amount: Int) {
+        // compatibilité - hasanat supprimés du système principal
+    }
+}
