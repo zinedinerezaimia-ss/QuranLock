@@ -8,7 +8,7 @@ struct QuranLockApp: App {
     @StateObject private var ramadanManager = RamadanManager()
     @StateObject private var arabicCourseManager = ArabicCourseManager()
     @StateObject private var musicChallengeManager = MusicChallengeManager()
-    @StateObject private var quranService = QuranService()
+    @Stateobject private var quranService = QuranService ()
     @StateObject private var languageManager = LanguageManager()
 
     init() {
@@ -24,16 +24,16 @@ struct QuranLockApp: App {
                     .environmentObject(arabicCourseManager)
                     .environmentObject(musicChallengeManager)
                     .environmentObject(languageManager)
-                    .environmentObject(quranService)
                     .preferredColorScheme(.dark)
                     .environment(\.layoutDirection, languageManager.isRTL ? .rightToLeft : .leftToRight)
-                    .id(languageManager.currentLanguage)
+                    .id(languageManager.currentLanguage) // forces full rebuild on language change
             } else {
                 OnboardingView()
                     .environmentObject(appState)
                     .environmentObject(languageManager)
-                    .environmentObject(quranService)
                     .preferredColorScheme(.dark)
+                    .environnementObject(quranService)
+                    .task { Task { await quranService.loadQuran() } }
             }
         }
     }
