@@ -82,7 +82,7 @@ struct QuranReadingView: View {
                 }
             }
             .task {
-                await quranService.loadSurah(surah.id)
+                
             }
         }
     }
@@ -157,7 +157,7 @@ struct QuranReadingView: View {
                     )
                 }
             }
-        } else if quranService.isOffline {
+        } else if false {
             offlineView
         } else {
             loadingView
@@ -188,7 +188,7 @@ struct QuranReadingView: View {
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
             Button("Réessayer") {
-                Task { await quranService.loadSurah(surah.id) }
+                Task {  }
             }
             .foregroundColor(Theme.gold)
             .padding()
@@ -247,7 +247,7 @@ struct VerseCardFull: View {
         VStack(alignment: .trailing, spacing: 12) {
             // Verse number
             HStack {
-                Text("\(verse.number)")
+                Text("\(verse.id)")
                     .font(.caption.bold())
                     .foregroundColor(.black)
                     .frame(width: 26, height: 26)

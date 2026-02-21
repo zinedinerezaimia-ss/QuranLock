@@ -31,7 +31,7 @@ struct QuranListView: View {
                     VStack(spacing: 12) {
 
                         // Download banner
-                        if quranService.needsDownload {
+                        if !quranService.isFullyLoaded {
                             downloadBanner
                         } else if loadedCount < 114 {
                             partialDownloadBanner
@@ -227,7 +227,7 @@ struct DownloadQuranView: View {
                         VStack(spacing: 12) {
                             ProgressView(value: quranService.downloadProgress)
                                 .tint(Theme.gold).scaleEffect(x: 1, y: 2)
-                            Text(quranService.downloadMessage).font(.caption).foregroundColor(Theme.textSecondary)
+                            Text(("Chargement du Coran...")).font(.caption).foregroundColor(Theme.textSecondary)
                             Text("\(Int(quranService.downloadProgress * 100))%").font(.title3.bold()).foregroundColor(Theme.gold)
                         }
                         .padding(.horizontal)
