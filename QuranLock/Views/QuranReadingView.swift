@@ -307,12 +307,12 @@ struct QuranDownloadView: View {
     @EnvironmentObject var quranService: QuranService
 
     var body: some View {
-        if quranService.isLoading && quranService.loadingProgress > 0 {
+        if quranService.isLoading && quranService.downloadProgress > 0 {
             VStack(spacing: 8) {
                 Text(quranService.loadingMessage)
                     .font(.caption)
                     .foregroundColor(Theme.textSecondary)
-                ProgressView(value: quranService.loadingProgress)
+                ProgressView(value: quranService.downloadProgress)
                     .tint(Theme.gold)
                     .padding(.horizontal)
             }
@@ -320,6 +320,51 @@ struct QuranDownloadView: View {
             .background(Theme.cardBg)
             .cornerRadius(12)
             .padding(.horizontal)
+        }
+    }
+}
+
+struct InfoBadge: View {
+    let title: String
+    let value: String
+    var body: some View {
+        VStack(spacing: 4) {
+            Text(value).font(.headline).foregroundColor(Theme.gold)
+            Text(title).font(.caption).foregroundColor(Theme.textSecondary)
+        }
+        .frame(maxWidth: .infinity).padding(.vertical, 10)
+        .background(Theme.cardBg).cornerRadius(10)
+    }
+}
+
+struct ShareReflectionView: View {
+    let surahName: String
+    let surahArabic: String
+    @Environment(\.dismiss) var dismiss
+    @State private var reflectionText = ""
+    @State private var shared = false
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Theme.primaryBg.ignoresSafeArea()
+                VStack(spacing: 20) {
+                    Text(surahArabic).font(.system(size: 32, weight: .bold)).foregroundColor(Theme.gold)
+                    Text("Sourate \(surahName)").font(.headline).foregroundColor(.white)
+                    Text("MashaAllah ! Tu as terminé cette sourate 🎉").font(.subheadline).foregroundColor(Theme.textSecondary)
+                    TextEditor(text: $reflectionText).foregroundColor(.white).frame(height: 120)
+                        .padding(10).background(Theme.secondaryBg).cornerRadius(12).padding(.horizontal)
+                    if shared {
+                        Text("Partagé ! Barakallahu fik 🤲").foregroundColor(Theme.success).padding()
+                    }
+                    Spacer()
+                    Button(action: { if !shared { shared = true } else { dismiss() } }) {
+                        Text(shared ? "Fermer" : "Partager").goldButton()
+                    }.padding(.horizontal)
+                    Button("Passer") { dismiss() }.foregroundColor(Theme.textSecondary).padding(.bottom)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .navigationBarTrailing) { Button("Fermer") { dismiss() }.foregroundColor(Theme.gold) } }
         }
     }
 }

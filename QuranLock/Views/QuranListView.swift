@@ -70,7 +70,7 @@ struct QuranListView: View {
             .navigationTitle("القرآن الكريم")
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedSurah) { surah in
-                QuranReadingView(surah: surah)
+                QuranReadingView(surah: Surah(id: surah.id, arabicName: surah.arabicName, frenchName: surah.nameFrench ?? surah.arabicName, englishName: surah.nameEnglish ?? "", phonetic: surah.nameTranslit ?? "", verseCount: surah.numberOfVerses, revelationType: surah.revelationType == "Meccan" ? "Mecquoise" : "Médinoise", isRamadanRecommended: false))
                     .environmentObject(appState)
                     .environmentObject(quranService)
             }
