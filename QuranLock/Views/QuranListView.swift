@@ -240,7 +240,7 @@ struct DownloadQuranView: View {
                         Button("Fermer") { dismiss() }.goldButton().padding(.horizontal)
                     } else {
                         Button(action: {
-                            Task { await quranService.downloadFullQuran() }
+                            
                         }) {
                             HStack {
                                 Image(systemName: "icloud.and.arrow.down")
