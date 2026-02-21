@@ -8,6 +8,7 @@ struct QuranLockApp: App {
     @StateObject private var ramadanManager = RamadanManager()
     @StateObject private var arabicCourseManager = ArabicCourseManager()
     @StateObject private var musicChallengeManager = MusicChallengeManager()
+    @Stateobject private var quranService = QuranService ()
     @StateObject private var languageManager = LanguageManager()
 
     init() {
@@ -31,6 +32,8 @@ struct QuranLockApp: App {
                     .environmentObject(appState)
                     .environmentObject(languageManager)
                     .preferredColorScheme(.dark)
+                    .environnementObject(quranService)
+                    .task { Task { await quranService.loadQuran() } }
             }
         }
     }
