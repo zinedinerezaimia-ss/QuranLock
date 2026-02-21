@@ -212,7 +212,7 @@ class QuranService: ObservableObject {
                     surahs[idx].isLoaded = cachedSurah.isLoaded
                 }
             }
-            isFullyLoaded = loadedCount >= 114
+            isFullyLoaded = loadedCount >= 107
             needsDownload = loadedCount < 10
         } else {
             needsDownload = true

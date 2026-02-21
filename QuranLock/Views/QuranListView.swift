@@ -110,7 +110,7 @@ struct QuranListView: View {
             Text("📥").font(.title3)
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(loadedCount)/114 sourates hors-ligne").font(.subheadline.bold()).foregroundColor(.white)
-                ProgressView(value: Double(loadedCount), total: 114).tint(Theme.gold)
+                ProgressView(value: quranService.isFullyLoaded ? 114.0 : Double(loadedCount), total: 114).tint(Theme.gold)
             }
             Button("Compléter") { showDownloadSheet = true }
                 .font(.caption.bold()).foregroundColor(Theme.gold)
