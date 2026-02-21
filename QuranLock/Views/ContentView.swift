@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var ramadanManager: RamadanManager
+    @EnvironmentObject var quranService: QuranService
 
     var body: some View {
         TabView(selection: $appState.selectedTab) {
@@ -13,24 +14,24 @@ struct ContentView: View {
                 }
                 .tag(0)
 
-            QuranReadingView()
+            QuranListView()
                 .tabItem {
                     Image(systemName: "book.fill")
                     Text("Coran")
                 }
                 .tag(1)
 
+            PrayerTimesView()
+                .tabItem {
+                    Image(systemName: "moon.stars.fill")
+                    Text("Prières")
+                }
+                .tag(2)
+
             ArabicCoursesView()
                 .tabItem {
                     Image(systemName: "character.book.closed.fill")
                     Text("Arabe")
-                }
-                .tag(2)
-
-            DuaasMainView()
-                .tabItem {
-                    Image(systemName: "hands.clap.fill")
-                    Text("Duaas")
                 }
                 .tag(3)
 
@@ -61,6 +62,8 @@ struct MoreView: View {
     @State private var showSadaqa = false
     @State private var showKhatm = false
     @State private var showProphet = false
+    @State private var showMosque = false
+    @State private var showDuaas = false
 
     var body: some View {
         NavigationView {
@@ -68,11 +71,13 @@ struct MoreView: View {
                 Theme.primaryBg.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 14) {
+                        moreButton(icon: "🤲", title: "Douaas & Invocations", sub: "50+ douaas authentiques") { showDuaas = true }
+                        moreButton(icon: "🕌", title: "Mosquée la plus proche", sub: "Localisation & temps de trajet") { showMosque = true }
                         moreButton(icon: "🧠", title: "Quiz Islamique", sub: "Teste tes connaissances") { showQuiz = true }
                         moreButton(icon: "👥", title: "Communauté", sub: "Partage & discussions") { showCommunity = true }
                         moreButton(icon: "🎵", title: "Défi Arrêter la Musique", sub: "Remplace la musique par le Coran") { showMusicChallenge = true }
                         moreButton(icon: "📖", title: "Enseignements", sub: "Piliers de l'Islam, Prière...") { showEnseignements = true }
-                        moreButton(icon: "🕌", title: "Mosquées & Sadaqa", sub: "Soutenir les mosquées") { showSadaqa = true }
+                        moreButton(icon: "💰", title: "Mosquées & Sadaqa", sub: "Soutenir les mosquées") { showSadaqa = true }
                         moreButton(icon: "🏁", title: "Défi Khatm", sub: "Terminer le Coran complet") { showKhatm = true }
                         moreButton(icon: "🌙", title: "Histoire du Prophète ﷺ", sub: "La Sîra du Prophète") { showProphet = true }
                     }
@@ -84,6 +89,8 @@ struct MoreView: View {
             .navigationTitle("إقرأ — Autre")
             .navigationBarTitleDisplayMode(.large)
         }
+        .sheet(isPresented: $showDuaas) { DuaasMainView() }
+        .sheet(isPresented: $showMosque) { MosqueFinderSheetWrapper() }
         .sheet(isPresented: $showQuiz) { QuizMainView() }
         .sheet(isPresented: $showCommunity) { CommunityView() }
         .sheet(isPresented: $showMusicChallenge) { MusicChallengeView() }
@@ -112,6 +119,42 @@ struct MoreView: View {
     }
 }
 
+// MARK: - Mosque Finder Sheet Wrapper (needs location)
+struct MosqueFinderSheetWrapper: View {
+    @StateObject private var locationManager = LocationManager()
+    @Environment(\.dismiss) var dismiss
+
+    var body: some View {
+        Group {
+            if let location = locationManager.location {
+                MosqueFinderView(userLocation: location)
+            } else {
+                ZStack {
+                    Theme.primaryBg.ignoresSafeArea()
+                    VStack(spacing: 20) {
+                        Image(systemName: "location.circle.fill")
+                            .font(.system(size: 60)).foregroundColor(Theme.gold)
+                        Text("Localisation requise").font(.title2.bold()).foregroundColor(.white)
+                        Text("Pour trouver les mosquées proches de toi, l'app a besoin d'accéder à ta position.")
+                            .font(.subheadline).foregroundColor(Theme.textSecondary)
+                            .multilineTextAlignment(.center).padding(.horizontal)
+                        if locationManager.authStatus == .denied {
+                            Text("Accès refusé — Active la localisation dans Réglages > Iqra")
+                                .font(.caption).foregroundColor(.red).multilineTextAlignment(.center)
+                        } else {
+                            ProgressView().tint(Theme.gold)
+                            Text("Recherche de ta position...").font(.caption).foregroundColor(Theme.textSecondary)
+                        }
+                        Button("Fermer") { dismiss() }.foregroundColor(Theme.gold)
+                    }
+                    .padding()
+                }
+            }
+        }
+        .onAppear { locationManager.request() }
+    }
+}
+
 // MARK: - Prophet Stories View
 struct ProphetStoriesView: View {
     @Environment(\.dismiss) var dismiss
@@ -133,12 +176,8 @@ struct ProphetStoriesView: View {
                 ScrollView {
                     VStack(spacing: 14) {
                         Text("La vie du Prophète Muhammad ﷺ est un guide pour toute l'humanité")
-                            .font(.subheadline)
-                            .foregroundColor(Theme.textSecondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                            .padding(.top, 4)
-
+                            .font(.subheadline).foregroundColor(Theme.textSecondary)
+                            .multilineTextAlignment(.center).padding(.horizontal).padding(.top, 4)
                         ForEach(stories, id: \.1) { story in
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(spacing: 10) {
@@ -147,14 +186,11 @@ struct ProphetStoriesView: View {
                                 }
                                 Text(story.2).font(.subheadline).foregroundColor(.white).lineSpacing(4)
                             }
-                            .padding(16)
-                            .background(Theme.cardBg)
-                            .cornerRadius(14)
+                            .padding(16).background(Theme.cardBg).cornerRadius(14)
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.cardBorder, lineWidth: 1))
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 20)
+                    .padding(.horizontal, 16).padding(.bottom, 20)
                 }
             }
             .navigationTitle("🌙 Sîra du Prophète ﷺ")
