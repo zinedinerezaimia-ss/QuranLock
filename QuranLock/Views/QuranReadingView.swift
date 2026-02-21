@@ -309,7 +309,7 @@ struct QuranDownloadView: View {
     var body: some View {
         if quranService.isLoading && quranService.downloadProgress > 0 {
             VStack(spacing: 8) {
-                Text(quranService.loadingMessage)
+                Text("Chargement...")
                     .font(.caption)
                     .foregroundColor(Theme.textSecondary)
                 ProgressView(value: quranService.downloadProgress)
