@@ -370,27 +370,171 @@ struct DataProvider {
         RamadanDuaa(id: "rd5", title: "Du'a de la nuit", arabicText: "رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ", phonetic: "Rabbana taqabbal minna innaka antas-Sami'ul-'Alim", translation: "Seigneur ! Accepte de nous, Tu es l'Audient, l'Omniscient.", context: "Pendant les prières de nuit (Tarawih/Qiyam)", category: "Night")
     ]
     
-    // MARK: - Adhkar Categories
+    // MARK: - Adhkar Categories (COMPLETS - FR / Phonétique / AR)
     static let adhkarCategories: [AdhkarCategory] = [
+
+        // ─── MATIN ───────────────────────────────────────────────────────────
         AdhkarCategory(id: "ak1", title: "Adhkar du matin", subtitle: "À réciter après Fajr", icon: "🌅", adhkars: [
-            Dhikr(id: "dh1", title: "Ayat Al-Kursi", arabicText: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ", transliteration: "Allahu la ilaha illa Huwa, Al-Hayyul-Qayyum...", translation: "Allah ! Il n'y a de divinité que Lui, le Vivant, le Subsistant...", repetitions: 1, source: "Bukhari", reward: "Protection jusqu'au soir"),
-            Dhikr(id: "dh2", title: "Sourate Al-Ikhlas", arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ", transliteration: "Qul Huwa Allahu Ahad...", translation: "Dis : Il est Allah, l'Unique...", repetitions: 3, source: "Abu Dawud", reward: "Protection contre tout mal")
+
+            Dhikr(id: "dh1", title: "Ayat Al-Kursi",
+                  arabicText: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+                  transliteration: "Allahu la ilaha illa Huwa, Al-Hayyul-Qayyum. La ta'khudhuhu sinatun wa la nawm. Lahu ma fis-samawati wa ma fil-ard. Man dhalladhi yashfa'u 'indahu illa bi-idhnih. Ya'lamu ma bayna aydihim wa ma khalfahum. Wa la yuhituna bi-shay'in min 'ilmihi illa bima sha'. Wasi'a kursiyyuhus-samawati wal-ard, wa la ya'uduhu hifdhuhuma. Wa Huwal-'Aliyyul-'Adhim.",
+                  translation: "Allah ! Il n'y a de divinité que Lui, le Vivant, le Subsistant. Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et la terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il sait ce qui est devant eux et ce qui est derrière eux. Ils n'embrassent de Son savoir que ce qu'Il veut. Son Trône s'étend sur les cieux et la terre, dont la garde ne Lui coûte aucune peine. C'est Lui le Très Haut, le Très Grand.",
+                  repetitions: 1, source: "Bukhari n°2311", reward: "Protection jusqu'au soir"),
+
+            Dhikr(id: "dh2", title: "Sourate Al-Ikhlas",
+                  arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+                  transliteration: "Qul huwa Allahu ahad. Allahus-Samad. Lam yalid wa lam yulad. Wa lam yakun lahu kufuwan ahad.",
+                  translation: "Dis : Il est Allah, l'Unique. Allah, le Seul à être imploré. Il n'a pas engendré et n'a pas été engendré. Et nul n'est égal à Lui.",
+                  repetitions: 3, source: "Abu Dawud n°5082", reward: "Protection contre tout mal, équivaut à 1/3 du Coran"),
+
+            Dhikr(id: "dh2b", title: "Sourate Al-Falaq",
+                  arabicText: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ مِن شَرِّ مَا خَلَقَ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+                  transliteration: "Qul a'udhu bi-Rabbil-falaq. Min sharri ma khalaq. Wa min sharri ghasiqin idha waqab. Wa min sharrin-naffathati fil-'uqad. Wa min sharri hasidin idha hasad.",
+                  translation: "Dis : Je cherche refuge auprès du Seigneur de l'aube naissante, contre le mal de ce qu'Il a créé, le mal de l'obscurité quand elle s'étend, le mal de celles qui soufflent sur les nœuds, et le mal de l'envieux quand il envie.",
+                  repetitions: 3, source: "Abu Dawud n°5082", reward: "Protection contre la sorcellerie et l'envie"),
+
+            Dhikr(id: "dh2c", title: "Sourate An-Nas",
+                  arabicText: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ مَلِكِ النَّاسِ إِلَٰهِ النَّاسِ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ مِنَ الْجِنَّةِ وَالنَّاسِ",
+                  transliteration: "Qul a'udhu bi-Rabbin-nas. Malikin-nas. Ilahin-nas. Min sharril-waswasil-khannas. Alladhi yuwaswisu fi sudurin-nas. Minal-jinnati wan-nas.",
+                  translation: "Dis : Je cherche refuge auprès du Seigneur des hommes, du Roi des hommes, de la Divinité des hommes, contre le mal du diable tentateur qui se retire, qui souffle le mal dans les poitrines des hommes, qu'il soit djinn ou homme.",
+                  repetitions: 3, source: "Abu Dawud n°5082", reward: "Protection contre les mauvaises pensées et le shaytan"),
+
+            Dhikr(id: "dh_matin_tasbih", title: "SubhanAllah wa bihamdihi",
+                  arabicText: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+                  transliteration: "SubhanAllahi wa bihamdihi",
+                  translation: "Gloire à Allah et Sa louange.",
+                  repetitions: 100, source: "Bukhari n°6405", reward: "Efface les péchés comme l'écume de la mer"),
+
+            Dhikr(id: "dh_matin_sayyid", title: "Sayyid al-Istighfar",
+                  arabicText: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+                  transliteration: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mastata'tu, a'udhu bika min sharri ma sana'tu, abu'u laka bini'matika 'alayya, wa abu'u bidhanbi, faghfir li fa-innahu la yaghfirudh-dhunuba illa ant",
+                  translation: "Ô Allah, Tu es mon Seigneur. Il n'y a de divinité que Toi. Tu m'as créé et je suis Ton serviteur. Je respecte Ton pacte et Ta promesse autant que je le peux. Je cherche refuge en Toi contre le mal de ce que j'ai commis. Je reconnais Tes bienfaits sur moi et je reconnais mon péché. Pardonne-moi, car personne ne pardonne les péchés sauf Toi.",
+                  repetitions: 1, source: "Bukhari n°6306", reward: "Mourir au Paradis si dit le matin avec conviction")
         ]),
+
+        // ─── SOIR ────────────────────────────────────────────────────────────
         AdhkarCategory(id: "ak2", title: "Adhkar du soir", subtitle: "À réciter après Asr/Maghrib", icon: "🌙", adhkars: [
-            Dhikr(id: "dh3", title: "Protection du soir", arabicText: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ", transliteration: "Amsayna wa amsal-mulku lillah", translation: "Nous voilà au soir et la royauté appartient à Allah", repetitions: 1, source: "Muslim", reward: nil)
+
+            Dhikr(id: "dh3", title: "Souveraineté d'Allah (soir)",
+                  arabicText: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                  transliteration: "Amsayna wa amsal-mulku lillah, wal-hamdu lillah, la ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir",
+                  translation: "Nous voilà au soir et la royauté appartient à Allah. Louange à Allah. Il n'y a de divinité qu'Allah Seul, sans associé. La royauté Lui appartient, la louange Lui revient, et Il est Omnipotent.",
+                  repetitions: 1, source: "Muslim n°2723", reward: nil),
+
+            Dhikr(id: "dh3b", title: "Ayat Al-Kursi (soir)",
+                  arabicText: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+                  transliteration: "Allahu la ilaha illa Huwa, Al-Hayyul-Qayyum. La ta'khudhuhu sinatun wa la nawm. Lahu ma fis-samawati wa ma fil-ard. Man dhalladhi yashfa'u 'indahu illa bi-idhnih. Ya'lamu ma bayna aydihim wa ma khalfahum. Wa la yuhituna bi-shay'in min 'ilmihi illa bima sha'. Wasi'a kursiyyuhus-samawati wal-ard. Wa la ya'uduhu hifdhuhuma. Wa Huwal-'Aliyyul-'Adhim.",
+                  translation: "Allah ! Il n'y a de divinité que Lui, le Vivant, le Subsistant. Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et la terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il sait ce qui est devant eux et ce qui est derrière eux. Ils n'embrassent de Son savoir que ce qu'Il veut. Son Trône s'étend sur les cieux et la terre, dont la garde ne Lui coûte aucune peine. C'est Lui le Très Haut, le Très Grand.",
+                  repetitions: 1, source: "Bukhari n°2311", reward: "Protection jusqu'au matin"),
+
+            Dhikr(id: "dh3c", title: "Sayyid al-Istighfar (soir)",
+                  arabicText: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+                  transliteration: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mastata'tu, a'udhu bika min sharri ma sana'tu, abu'u laka bini'matika 'alayya, wa abu'u bidhanbi, faghfir li fa-innahu la yaghfirudh-dhunuba illa ant",
+                  translation: "Ô Allah, Tu es mon Seigneur. Il n'y a de divinité que Toi. Tu m'as créé et je suis Ton serviteur. Je respecte Ton pacte et Ta promesse autant que je le peux. Je cherche refuge en Toi contre le mal de ce que j'ai commis. Je reconnais Tes bienfaits sur moi et je reconnais mon péché. Pardonne-moi, car personne ne pardonne les péchés sauf Toi.",
+                  repetitions: 1, source: "Bukhari n°6306", reward: "Mourir au Paradis si dit le soir avec conviction"),
+
+            Dhikr(id: "dh_soir_ikhlas", title: "Al-Ikhlas, Al-Falaq, An-Nas (soir)",
+                  arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ اللَّهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+                  transliteration: "Qul huwa Allahu ahad. Allahus-Samad. Lam yalid wa lam yulad. Wa lam yakun lahu kufuwan ahad.",
+                  translation: "Dis : Il est Allah, l'Unique. Allah, le Seul à être imploré. Il n'a pas engendré et n'a pas été engendré. Et nul n'est égal à Lui. (Lire aussi Al-Falaq et An-Nas, 3 fois chacune)",
+                  repetitions: 3, source: "Abu Dawud n°5082, Tirmidhi", reward: "Protection pour toute la nuit")
         ]),
+
+        // ─── APRÈS LA PRIÈRE ────────────────────────────────────────────────
         AdhkarCategory(id: "ak3", title: "Après la prière", subtitle: "Tasbih, Tahmid, Takbir...", icon: "🕌", adhkars: [
-            Dhikr(id: "dh4", title: "SubhanAllah", arabicText: "سُبْحَانَ اللَّهِ", transliteration: "SubhanAllah", translation: "Gloire à Allah", repetitions: 33, source: "Muslim", reward: "Expiation des péchés"),
-            Dhikr(id: "dh5", title: "Alhamdulillah", arabicText: "الْحَمْدُ لِلَّهِ", transliteration: "Alhamdulillah", translation: "Louange à Allah", repetitions: 33, source: "Muslim", reward: nil),
-            Dhikr(id: "dh6", title: "Allahu Akbar", arabicText: "اللَّهُ أَكْبَرُ", transliteration: "Allahu Akbar", translation: "Allah est le Plus Grand", repetitions: 34, source: "Muslim", reward: nil)
+
+            Dhikr(id: "dh4", title: "SubhanAllah",
+                  arabicText: "سُبْحَانَ اللَّهِ",
+                  transliteration: "SubhanAllah",
+                  translation: "Gloire à Allah",
+                  repetitions: 33, source: "Muslim n°597", reward: "Expiation des péchés"),
+
+            Dhikr(id: "dh5", title: "Alhamdulillah",
+                  arabicText: "الْحَمْدُ لِلَّهِ",
+                  transliteration: "Alhamdulillah",
+                  translation: "Louange à Allah",
+                  repetitions: 33, source: "Muslim n°597", reward: nil),
+
+            Dhikr(id: "dh6", title: "Allahu Akbar",
+                  arabicText: "اللَّهُ أَكْبَرُ",
+                  transliteration: "Allahu Akbar",
+                  translation: "Allah est le Plus Grand",
+                  repetitions: 34, source: "Muslim n°597", reward: nil),
+
+            Dhikr(id: "dh6b", title: "La ilaha illallah (après prière)",
+                  arabicText: "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                  transliteration: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu wa huwa 'ala kulli shay'in qadir",
+                  translation: "Il n'y a de divinité qu'Allah Seul, sans associé. La royauté Lui appartient, la louange Lui revient, et Il est Omnipotent.",
+                  repetitions: 1, source: "Muslim n°597", reward: "Pardonne les péchés même comme l'écume de la mer"),
+
+            Dhikr(id: "dh6c", title: "Ayat Al-Kursi (après prière)",
+                  arabicText: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+                  transliteration: "Allahu la ilaha illa Huwa, Al-Hayyul-Qayyum. La ta'khudhuhu sinatun wa la nawm. Lahu ma fis-samawati wa ma fil-ard. Man dhalladhi yashfa'u 'indahu illa bi-idhnih. Ya'lamu ma bayna aydihim wa ma khalfahum. Wa la yuhituna bi-shay'in min 'ilmihi illa bima sha'. Wasi'a kursiyyuhus-samawati wal-ard. Wa la ya'uduhu hifdhuhuma. Wa Huwal-'Aliyyul-'Adhim.",
+                  translation: "Allah ! Il n'y a de divinité que Lui, le Vivant, le Subsistant. Ni somnolence ni sommeil ne Le saisissent. À Lui appartient tout ce qui est dans les cieux et la terre. Qui peut intercéder auprès de Lui sans Sa permission ? Il sait ce qui est devant eux et ce qui est derrière eux. Ils n'embrassent de Son savoir que ce qu'Il veut. Son Trône s'étend sur les cieux et la terre, dont la garde ne Lui coûte aucune peine. C'est Lui le Très Haut, le Très Grand.",
+                  repetitions: 1, source: "Nasa'i, Al-Albani (sahih)", reward: "Entrée directe au Paradis à la mort")
         ]),
+
+        // ─── DHIKRS GÉNÉRAUX ────────────────────────────────────────────────
         AdhkarCategory(id: "ak4", title: "Dhikrs généraux", subtitle: "À tout moment", icon: "💕", adhkars: [
-            Dhikr(id: "dh7", title: "La ilaha illAllah", arabicText: "لَا إِلَٰهَ إِلَّا اللَّهُ", transliteration: "La ilaha illAllah", translation: "Il n'y a de divinité qu'Allah", repetitions: 100, source: "Bukhari & Muslim", reward: "Meilleure parole"),
-            Dhikr(id: "dh8", title: "Istighfar", arabicText: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullah", translation: "Je demande pardon à Allah", repetitions: 100, source: "Bukhari", reward: "Pardon des péchés")
+
+            Dhikr(id: "dh7", title: "La ilaha illAllah",
+                  arabicText: "لَا إِلَٰهَ إِلَّا اللَّهُ",
+                  transliteration: "La ilaha illAllah",
+                  translation: "Il n'y a de divinité qu'Allah",
+                  repetitions: 100, source: "Bukhari n°6403, Muslim n°2691", reward: "Meilleure parole que l'on puisse dire"),
+
+            Dhikr(id: "dh8", title: "Istighfar",
+                  arabicText: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+                  transliteration: "Astaghfirullaha wa atubu ilayh",
+                  translation: "Je demande pardon à Allah et je me repens à Lui",
+                  repetitions: 100, source: "Bukhari n°6307", reward: "Le Prophète ﷺ en faisait 100 par jour"),
+
+            Dhikr(id: "dh8b", title: "Hawqala",
+                  arabicText: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+                  transliteration: "La hawla wa la quwwata illa billah",
+                  translation: "Il n'y a de force ni de puissance qu'en Allah",
+                  repetitions: 33, source: "Bukhari, Muslim", reward: "Trésor du Paradis"),
+
+            Dhikr(id: "dh8c", title: "Salawat sur le Prophète ﷺ",
+                  arabicText: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+                  transliteration: "Allahumma salli wa sallim 'ala Nabiyyina Muhammad",
+                  translation: "Ô Allah, prie et salue notre Prophète Muhammad ﷺ",
+                  repetitions: 10, source: "Muslim n°408", reward: "Allah envoie 10 bénédictions en retour")
         ]),
+
+        // ─── SITUATIONNELS ──────────────────────────────────────────────────
         AdhkarCategory(id: "ak5", title: "Invocations situationnelles", subtitle: "Voyage, maladie, difficulté...", icon: "🤲", adhkars: [
-            Dhikr(id: "dh9", title: "En cas de difficulté", arabicText: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "HasbunAllahu wa ni'mal-Wakil", translation: "Allah nous suffit, Il est le meilleur des garants.", repetitions: 7, source: "Bukhari", reward: "Soutien d'Allah"),
-            Dhikr(id: "dh10", title: "En voyage", arabicText: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ", transliteration: "Subhana-alladhi sakhkhara lana hadha wa ma kunna lahu muqrinin", translation: "Gloire à Celui qui a mis ceci à notre service alors que nous n'étions pas en mesure de les maîtriser.", repetitions: 1, source: "Muslim", reward: nil)
+
+            Dhikr(id: "dh9", title: "En cas de difficulté",
+                  arabicText: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+                  transliteration: "HasbunAllahu wa ni'mal-Wakil",
+                  translation: "Allah nous suffit, Il est le meilleur des garants.",
+                  repetitions: 7, source: "Bukhari n°4563", reward: "Soutien d'Allah dans l'épreuve"),
+
+            Dhikr(id: "dh10", title: "En voyage",
+                  arabicText: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنقَلِبُونَ",
+                  transliteration: "Subhana-alladhi sakhkhara lana hadha wa ma kunna lahu muqrinin, wa inna ila Rabbina lamunqalibun",
+                  translation: "Gloire à Celui qui a mis ceci à notre service alors que nous n'étions pas en mesure de le maîtriser, et c'est vers notre Seigneur que nous retournerons.",
+                  repetitions: 1, source: "Coran 43:13-14, Muslim", reward: nil),
+
+            Dhikr(id: "dh11", title: "En cas de tristesse / anxiété",
+                  arabicText: "اللَّهُمَّ إِنِّي عَبْدُكَ ابْنُ عَبْدِكَ ابْنُ أَمَتِكَ نَاصِيَتِي بِيَدِكَ مَاضٍ فِيَّ حُكْمُكَ عَدْلٌ فِيَّ قَضَاؤُكَ أَسْأَلُكَ بِكُلِّ اسْمٍ هُوَ لَكَ سَمَّيْتَ بِهِ نَفْسَكَ أَوْ أَنْزَلْتَهُ فِي كِتَابِكَ أَوْ عَلَّمْتَهُ أَحَدًا مِنْ خَلْقِكَ أَوِ اسْتَأْثَرْتَ بِهِ فِي عِلْمِ الْغَيْبِ عِنْدَكَ أَنْ تَجْعَلَ الْقُرْآنَ رَبِيعَ قَلْبِي وَنُورَ صَدْرِي وَجَلَاءَ حُزْنِي وَذَهَابَ هَمِّي",
+                  transliteration: "Allahumma inni 'abduka, ibnu 'abdika, ibnu amatika, nasiyati biyadika, madin fiyya hukmuka, 'adlun fiyya qada'uka, as'aluka bi-kulli ismin huwa laka, sammayta bihi nafsaka, aw anzaltahu fi kitabika, aw 'allamtahu ahadan min khalqika, awista'tharta bihi fi 'ilmil-ghaybi 'indaka, an taj'alal-Qurana rabbi'a qalbi, wa nura sadri, wa jala'a huzni, wa dhahaba hammi",
+                  translation: "Ô Allah, je suis Ton serviteur, fils de Ton serviteur, fils de Ta servante. Mon destin est entre Tes mains. Ton jugement s'exerce sur moi. Ta décision est juste. Je Te supplie par chacun de Tes noms de faire du Coran le printemps de mon cœur, la lumière de ma poitrine, et la dissipation de ma tristesse et de mon anxiété.",
+                  repetitions: 1, source: "Ahmad n°3704", reward: "Allah remplace la tristesse par la joie"),
+
+            Dhikr(id: "dh12", title: "Duaa de Yunus ﷺ",
+                  arabicText: "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+                  transliteration: "La ilaha illa anta subhanaka inni kuntu minaz-zalimin",
+                  translation: "Il n'y a de divinité que Toi, gloire à Toi, j'ai en effet été du nombre des injustes.",
+                  repetitions: 40, source: "Tirmidhi n°3505", reward: "Allah exauce la duaa comme pour Yunus alayhissalam"),
+
+            Dhikr(id: "dh13", title: "Protection pour la famille",
+                  arabicText: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+                  transliteration: "A'udhu bi-kalimatillahit-tammati min sharri ma khalaq",
+                  translation: "Je cherche refuge dans les paroles parfaites d'Allah contre le mal de ce qu'Il a créé.",
+                  repetitions: 3, source: "Muslim n°2708", reward: "Protection contre tout mal")
         ])
     ]
 }
