@@ -8,24 +8,37 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var location: CLLocation?
     @Published var cityName: String = ""
     @Published var authStatus: CLAuthorizationStatus = .notDetermined
+    @Published var locationError: String?
 
     override init() {
         super.init()
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyKilometer
+        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
     }
 
     func request() {
-        manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
+        locationError = nil
+        let status = manager.authorizationStatus
+        switch status {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.startUpdatingLocation()
+        case .denied, .restricted:
+            locationError = "Localisation refusée. Allez dans Réglages > Confidentialité > Services de localisation."
+        @unknown default:
+            manager.requestWhenInUseAuthorization()
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.first else { return }
+        guard let loc = locations.last else { return }
+        // Only accept locations less than 5 minutes old
+        guard abs(loc.timestamp.timeIntervalSinceNow) < 300 else { return }
         self.location = loc
+        self.locationError = nil
         manager.stopUpdatingLocation()
 
-        // Reverse geocode for city name
         CLGeocoder().reverseGeocodeLocation(loc) { placemarks, _ in
             DispatchQueue.main.async {
                 self.cityName = placemarks?.first?.locality ?? placemarks?.first?.country ?? "Votre position"
@@ -33,10 +46,27 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if let clError = error as? CLError {
+            switch clError.code {
+            case .denied:
+                locationError = "Localisation refusée. Activez-la dans les Réglages."
+            case .locationUnknown:
+                // Temporary error, keep trying
+                break
+            default:
+                locationError = "Erreur de localisation. Réessayez."
+            }
+        }
+    }
+
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authStatus = manager.authorizationStatus
         if authStatus == .authorizedWhenInUse || authStatus == .authorizedAlways {
+            locationError = nil
             manager.startUpdatingLocation()
+        } else if authStatus == .denied {
+            locationError = "Localisation refusée. Activez-la dans Réglages > Confidentialité."
         }
     }
 }
@@ -46,17 +76,16 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 struct PrayerTimesView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var prayerTimes: PrayerTimes?
+    @State private var isLoadingTimes = false
     @State private var notificationsEnabled = false
     @State private var now = Date()
     @State private var showMosqueFinder = false
 
-    private let calculator = PrayerTimesCalculator()
     private let timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationView {
             ZStack {
-                // Background
                 LinearGradient(
                     colors: [Color(hex: "0D0D1A"), Color(hex: "1A1A2E")],
                     startPoint: .top, endPoint: .bottom
@@ -64,13 +93,26 @@ struct PrayerTimesView: View {
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
-
-                        // Header card
                         headerCard
+
+                        // Error state
+                        if let error = locationManager.locationError {
+                            errorCard(message: error)
+                        }
+
+                        // Loading state
+                        if isLoadingTimes && prayerTimes == nil {
+                            loadingCard
+                        }
 
                         // Next prayer countdown
                         if let times = prayerTimes, let next = times.nextPrayer {
                             nextPrayerCard(prayer: next)
+                        }
+
+                        // Hijri date
+                        if let hijri = prayerTimes?.hijriDate {
+                            hijriCard(date: hijri)
                         }
 
                         // All prayers list
@@ -97,7 +139,7 @@ struct PrayerTimesView: View {
             }
             .onChange(of: locationManager.location) { loc in
                 if let loc = loc {
-                    recalculate(location: loc)
+                    fetchTimes(location: loc)
                 }
             }
             .onReceive(timer) { _ in
@@ -105,7 +147,7 @@ struct PrayerTimesView: View {
             }
             .sheet(isPresented: $showMosqueFinder) {
                 if let loc = locationManager.location {
-                    MosqueFinderView(userLocation: loc)
+                    MosqueFinderView(userLocation: loc, prayerTimes: prayerTimes)
                 }
             }
         }
@@ -129,18 +171,68 @@ struct PrayerTimesView: View {
                 }
             }
             Spacer()
-            if locationManager.location == nil {
+            if locationManager.location == nil && locationManager.locationError == nil {
                 ProgressView()
                     .tint(Color(hex: "C9A84C"))
-            } else {
+            } else if locationManager.location != nil {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.green)
+            } else {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundColor(.orange)
             }
         }
         .padding(16)
         .background(Color(hex: "1A1A2E"))
         .cornerRadius(16)
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color(hex: "C9A84C").opacity(0.3), lineWidth: 1))
+    }
+
+    private func errorCard(message: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.orange)
+            Text(message)
+                .font(.subheadline)
+                .foregroundColor(.white)
+            Spacer()
+            Button("Réessayer") {
+                locationManager.request()
+            }
+            .font(.caption.bold())
+            .foregroundColor(Color(hex: "C9A84C"))
+        }
+        .padding(14)
+        .background(Color.orange.opacity(0.1))
+        .cornerRadius(12)
+    }
+
+    private var loadingCard: some View {
+        HStack(spacing: 12) {
+            ProgressView()
+                .tint(Color(hex: "C9A84C"))
+            Text("Chargement des horaires...")
+                .font(.subheadline)
+                .foregroundColor(Color(hex: "9090A0"))
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity)
+        .background(Color(hex: "1A1A2E"))
+        .cornerRadius(16)
+    }
+
+    private func hijriCard(date: String) -> some View {
+        HStack {
+            Image(systemName: "moon.stars.fill")
+                .foregroundColor(Color(hex: "C9A84C"))
+            Text(date)
+                .font(.subheadline)
+                .foregroundColor(.white)
+            Spacer()
+        }
+        .padding(12)
+        .background(Color(hex: "C9A84C").opacity(0.1))
+        .cornerRadius(12)
     }
 
     private func nextPrayerCard(prayer: (name: String, arabic: String, time: Date)) -> some View {
@@ -162,7 +254,6 @@ struct PrayerTimesView: View {
                 .font(.system(size: 36, weight: .black))
                 .foregroundColor(.white)
 
-            // Countdown
             HStack(spacing: 4) {
                 Text(hours > 0 ? "\(hours)h \(minutes)min" : "\(minutes) min")
                     .font(.subheadline.bold())
@@ -172,7 +263,6 @@ struct PrayerTimesView: View {
                     .foregroundColor(Color(hex: "9090A0"))
             }
 
-            // Progress bar to next prayer
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
@@ -213,7 +303,6 @@ struct PrayerTimesView: View {
                 let isNext = times.nextPrayer?.name == prayer.name
 
                 HStack {
-                    // Arabic name
                     Text(prayer.arabic)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(isNext ? Color(hex: "C9A84C") : .white)
@@ -221,19 +310,16 @@ struct PrayerTimesView: View {
 
                     Spacer()
 
-                    // French name
                     Text(prayer.name)
                         .font(.subheadline)
                         .foregroundColor(isPassed ? Color(hex: "9090A0") : .white)
 
                     Spacer()
 
-                    // Time
                     Text(formatTime(prayer.time))
                         .font(.system(size: 16, weight: .bold, design: .monospaced))
                         .foregroundColor(isNext ? Color(hex: "C9A84C") : (isPassed ? Color(hex: "9090A0") : .white))
 
-                    // Status icon
                     if isPassed {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green.opacity(0.7))
@@ -307,7 +393,10 @@ struct PrayerTimesView: View {
                         if enabled {
                             let granted = await PrayerNotificationService.shared.requestPermission()
                             if granted, let loc = locationManager.location {
-                                await PrayerNotificationService.shared.scheduleNotifications(for: loc)
+                                await PrayerNotificationService.shared.scheduleNotifications(
+                                    latitude: loc.coordinate.latitude,
+                                    longitude: loc.coordinate.longitude
+                                )
                             } else {
                                 notificationsEnabled = false
                             }
@@ -324,21 +413,27 @@ struct PrayerTimesView: View {
 
     // MARK: - Helpers
 
-    private func recalculate(location: CLLocation) {
-        prayerTimes = calculator.calculate(
-            for: Date(),
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
+    private func fetchTimes(location: CLLocation) {
+        isLoadingTimes = true
+        Task {
+            let times = await PrayerTimesService.shared.fetchPrayerTimes(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude
+            )
+            await MainActor.run {
+                self.prayerTimes = times
+                self.isLoadingTimes = false
+            }
+        }
     }
 
     private func progressToNext() -> Double {
         guard let times = prayerTimes,
               let next = times.nextPrayer,
-              let prevIdx = times.all.firstIndex(where: { $0.name == next.name }).map({ $0 - 1 }),
-              prevIdx >= 0 else { return 0.5 }
+              let nextIdx = times.all.firstIndex(where: { $0.name == next.name }),
+              nextIdx > 0 else { return 0.5 }
 
-        let prev = times.all[prevIdx]
+        let prev = times.all[nextIdx - 1]
         let total = next.time.timeIntervalSince(prev.time)
         let elapsed = now.timeIntervalSince(prev.time)
         return max(0, min(1, elapsed / total))

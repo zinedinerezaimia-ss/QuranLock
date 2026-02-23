@@ -2,6 +2,43 @@ import Foundation
 import CoreLocation
 import UserNotifications
 
+// MARK: - Aladhan API Models
+
+struct AladhanResponse: Codable {
+    let code: Int
+    let data: AladhanData
+}
+
+struct AladhanData: Codable {
+    let timings: AladhanTimings
+    let date: AladhanDate?
+}
+
+struct AladhanTimings: Codable {
+    let Fajr: String
+    let Sunrise: String
+    let Dhuhr: String
+    let Asr: String
+    let Maghrib: String
+    let Isha: String
+}
+
+struct AladhanDate: Codable {
+    let hijri: HijriDate?
+}
+
+struct HijriDate: Codable {
+    let day: String?
+    let month: HijriMonth?
+    let year: String?
+}
+
+struct HijriMonth: Codable {
+    let number: Int?
+    let en: String?
+    let ar: String?
+}
+
 // MARK: - Prayer Times Model
 
 struct PrayerTimes {
@@ -11,6 +48,7 @@ struct PrayerTimes {
     let asr: Date
     let maghrib: Date
     let isha: Date
+    let hijriDate: String?
 
     var all: [(name: String, arabic: String, time: Date)] {
         [
@@ -32,99 +70,79 @@ struct PrayerTimes {
     }
 }
 
-// MARK: - Prayer Times Calculator (Muslim World League method)
+// MARK: - Prayer Times Service (Aladhan API)
 
-class PrayerTimesCalculator {
+class PrayerTimesService {
 
-    // Method: Muslim World League
-    private let fajrAngle: Double = 18.0
-    private let ishaAngle: Double = 17.0
+    static let shared = PrayerTimesService()
 
-    func calculate(for date: Date, latitude: Double, longitude: Double) -> PrayerTimes {
-        let jd = julianDay(date: date)
-        let d = jd - 2451545.0
+    /// Fetch prayer times from Aladhan API
+    /// Method 12 = UOIF (Union des Organisations Islamiques de France)
+    func fetchPrayerTimes(latitude: Double, longitude: Double, date: Date = Date()) async -> PrayerTimes? {
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+        let month = calendar.component(.month, from: date)
+        let year = calendar.component(.year, from: date)
 
-        let eqTime = equationOfTime(d: d)
-        let decl = sunDeclination(d: d)
+        let dateStr = String(format: "%02d-%02d-%04d", day, month, year)
 
-        let fajrTime = prayerTime(d: d, latitude: latitude, t: 5.0 - eqTime / 60.0, angle: fajrAngle, direction: -1)
-        let sunriseTime = prayerTime(d: d, latitude: latitude, t: 6.0 - eqTime / 60.0, angle: 0.833, direction: -1)
-        let dhuhrTime = 12.0 - eqTime / 60.0 - longitude / 15.0
-        let asrTime = asrPrayerTime(d: d, latitude: latitude, t: dhuhrTime + 1.0)
-        let maghribTime = prayerTime(d: d, latitude: latitude, t: dhuhrTime + 1.0, angle: 0.833, direction: 1)
-        let ishaTime = prayerTime(d: d, latitude: latitude, t: dhuhrTime + 1.0, angle: ishaAngle, direction: 1)
+        // Method 12 = UOIF for France
+        let urlString = "https://api.aladhan.com/v1/timings/\(dateStr)?latitude=\(latitude)&longitude=\(longitude)&method=12&school=0"
 
-        let tz = TimeZone.current.secondsFromGMT() / 3600
-        let offset = Double(tz) - longitude / 15.0
+        guard let url = URL(string: urlString) else { return nil }
 
-        return PrayerTimes(
-            fajr: dateFromHours(hours: fajrTime + offset, base: date),
-            sunrise: dateFromHours(hours: sunriseTime + offset, base: date),
-            dhuhr: dateFromHours(hours: dhuhrTime + offset, base: date),
-            asr: dateFromHours(hours: asrTime + offset, base: date),
-            maghrib: dateFromHours(hours: maghribTime + offset, base: date),
-            isha: dateFromHours(hours: ishaTime + offset, base: date)
-        )
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else { return nil }
+
+            let aladhan = try JSONDecoder().decode(AladhanResponse.self, from: data)
+            let timings = aladhan.data.timings
+
+            guard let fajr = parseTime(timings.Fajr, on: date),
+                  let sunrise = parseTime(timings.Sunrise, on: date),
+                  let dhuhr = parseTime(timings.Dhuhr, on: date),
+                  let asr = parseTime(timings.Asr, on: date),
+                  let maghrib = parseTime(timings.Maghrib, on: date),
+                  let isha = parseTime(timings.Isha, on: date) else { return nil }
+
+            // Build hijri date string
+            var hijriStr: String? = nil
+            if let hijri = aladhan.data.date?.hijri {
+                let d = hijri.day ?? ""
+                let m = hijri.month?.ar ?? hijri.month?.en ?? ""
+                let y = hijri.year ?? ""
+                if !d.isEmpty && !m.isEmpty {
+                    hijriStr = "\(d) \(m) \(y)"
+                }
+            }
+
+            return PrayerTimes(
+                fajr: fajr, sunrise: sunrise, dhuhr: dhuhr,
+                asr: asr, maghrib: maghrib, isha: isha,
+                hijriDate: hijriStr
+            )
+        } catch {
+            print("Aladhan API error: \(error)")
+            return nil
+        }
     }
 
-    // MARK: - Astronomical calculations
+    /// Parse "HH:mm" or "HH:mm (CEST)" into Date
+    private func parseTime(_ timeStr: String, on date: Date) -> Date? {
+        let cleaned = timeStr.components(separatedBy: " ").first ?? timeStr
+        let parts = cleaned.components(separatedBy: ":")
+        guard parts.count == 2,
+              let hour = Int(parts[0]),
+              let minute = Int(parts[1]) else { return nil }
 
-    private func julianDay(date: Date) -> Double {
-        let cal = Calendar(identifier: .gregorian)
-        let comps = cal.dateComponents([.year, .month, .day], from: date)
-        var y = Double(comps.year!)
-        var m = Double(comps.month!)
-        let d = Double(comps.day!)
-
-        if m <= 2 { y -= 1; m += 12 }
-
-        let a = floor(y / 100)
-        let b = 2 - a + floor(a / 4)
-        return floor(365.25 * (y + 4716)) + floor(30.6001 * (m + 1)) + d + b - 1524.5
-    }
-
-    private func equationOfTime(d: Double) -> Double {
-        let e = 0.016708634 - d * (0.000042037 + 0.0000001267 * d)
-        let m = toRad(280.46646 + d * 0.9856474 - 360 * floor((280.46646 + d * 0.9856474) / 360))
-        let eq = -7.655 * sin(m) + 9.873 * sin(2 * m + toRad(3.588)) + 0.439 * sin(4 * m + toRad(7.176))
-        return eq
-    }
-
-    private func sunDeclination(d: Double) -> Double {
-        let g = toRad(357.529 + 0.98560028 * d)
-        let q = 280.459 + 0.98564736 * d
-        let l = toRad(q + 1.915 * sin(g) + 0.020 * sin(2 * g))
-        let e = toRad(23.439 - 0.00000036 * d)
-        return toDeg(asin(sin(e) * sin(l)))
-    }
-
-    private func prayerTime(d: Double, latitude: Double, t: Double, angle: Double, direction: Double) -> Double {
-        let decl = sunDeclination(d: d)
-        let num = -sin(toRad(angle)) - sin(toRad(latitude)) * sin(toRad(decl))
-        let den = cos(toRad(latitude)) * cos(toRad(decl))
-        let hourAngle = toDeg(acos(num / den)) / 15.0
-        return t + direction * hourAngle
-    }
-
-    private func asrPrayerTime(d: Double, latitude: Double, t: Double) -> Double {
-        let decl = sunDeclination(d: d)
-        let targetAlt = toDeg(atan(1.0 / (1.0 + tan(toRad(abs(latitude - decl))))))
-        let num = sin(toRad(targetAlt)) - sin(toRad(latitude)) * sin(toRad(decl))
-        let den = cos(toRad(latitude)) * cos(toRad(decl))
-        let hourAngle = toDeg(acos(num / den)) / 15.0
-        return t + hourAngle
-    }
-
-    private func toRad(_ deg: Double) -> Double { deg * .pi / 180 }
-    private func toDeg(_ rad: Double) -> Double { rad * 180 / .pi }
-
-    private func dateFromHours(hours: Double, base: Date) -> Date {
-        let cal = Calendar(identifier: .gregorian)
-        let startOfDay = cal.startOfDay(for: base)
-        let h = Int(hours)
-        let m = Int((hours - Double(h)) * 60)
-        let s = Int(((hours - Double(h)) * 60 - Double(m)) * 60)
-        return cal.date(byAdding: .init(hour: h, minute: m, second: s), to: startOfDay) ?? base
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day], from: date)
+        components.hour = hour
+        components.minute = minute
+        components.second = 0
+        return calendar.date(from: components)
     }
 }
 
@@ -133,7 +151,6 @@ class PrayerTimesCalculator {
 class PrayerNotificationService {
 
     static let shared = PrayerNotificationService()
-    private let calculator = PrayerTimesCalculator()
 
     func requestPermission() async -> Bool {
         let center = UNUserNotificationCenter.current()
@@ -141,10 +158,9 @@ class PrayerNotificationService {
         return granted ?? false
     }
 
-    func scheduleNotifications(for location: CLLocation, days: Int = 7) async {
+    func scheduleNotifications(latitude: Double, longitude: Double, days: Int = 7) async {
         let center = UNUserNotificationCenter.current()
 
-        // Remove old prayer notifications
         center.removePendingNotificationRequests(withIdentifiers:
             (0..<days).flatMap { d in
                 ["fajr_\(d)", "dhuhr_\(d)", "asr_\(d)", "maghrib_\(d)", "isha_\(d)"]
@@ -161,20 +177,17 @@ class PrayerNotificationService {
 
         for day in 0..<days {
             let date = Calendar.current.date(byAdding: .day, value: day, to: Date()) ?? Date()
-            let times = calculator.calculate(
-                for: date,
-                latitude: location.coordinate.latitude,
-                longitude: location.coordinate.longitude
-            )
+            guard let times = await PrayerTimesService.shared.fetchPrayerTimes(
+                latitude: latitude, longitude: longitude, date: date
+            ) else { continue }
 
             let prayerTimes = [times.fajr, times.dhuhr, times.asr, times.maghrib, times.isha]
 
             for (i, prayer) in prayers.enumerated() {
                 let content = UNMutableNotificationContent()
                 content.title = "\(prayer.emoji) Il est l'heure de \(prayer.name)"
-                content.body = "Allahu Akbar - La prière est meilleure que le sommeil 🤲"
+                content.body = "Allahu Akbar — La prière est meilleure que le sommeil 🤲"
                 content.sound = .default
-                content.badge = 1
 
                 let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: prayerTimes[i])
                 let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)

@@ -18,14 +18,18 @@ struct Mosque: Identifiable {
 
 struct MosqueFinderView: View {
     let userLocation: CLLocation
+    let prayerTimes: PrayerTimes?
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: MosqueFinderViewModel
     @State private var selectedMosque: Mosque?
-    @State private var showMap = false
 
-    init(userLocation: CLLocation) {
+    init(userLocation: CLLocation, prayerTimes: PrayerTimes? = nil) {
         self.userLocation = userLocation
-        _viewModel = StateObject(wrappedValue: MosqueFinderViewModel(userLocation: userLocation))
+        self.prayerTimes = prayerTimes
+        _viewModel = StateObject(wrappedValue: MosqueFinderViewModel(
+            userLocation: userLocation,
+            prayerTimes: prayerTimes
+        ))
     }
 
     var body: some View {
@@ -40,12 +44,10 @@ struct MosqueFinderView: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 12) {
-                            // Next prayer countdown banner
                             if let next = viewModel.nextPrayer {
                                 nextPrayerBanner(prayer: next)
                             }
 
-                            // Mosque list
                             ForEach(viewModel.mosques) { mosque in
                                 mosqueCard(mosque: mosque)
                                     .onTapGesture {
@@ -65,8 +67,10 @@ struct MosqueFinderView: View {
                         .foregroundColor(Color(hex: "C9A84C"))
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { showMap.toggle() }) {
-                        Image(systemName: showMap ? "list.bullet" : "map")
+                    Button(action: {
+                        Task { await viewModel.searchMosques() }
+                    }) {
+                        Image(systemName: "arrow.clockwise")
                             .foregroundColor(Color(hex: "C9A84C"))
                     }
                 }
@@ -99,7 +103,7 @@ struct MosqueFinderView: View {
             Text("Aucune mosquée trouvée")
                 .font(.headline)
                 .foregroundColor(.white)
-            Text("Essayez d'élargir la zone de recherche")
+            Text("Vérifiez votre connexion internet")
                 .font(.subheadline)
                 .foregroundColor(Color(hex: "9090A0"))
             Button("Réessayer") {
@@ -160,7 +164,6 @@ struct MosqueFinderView: View {
             }
 
             HStack(spacing: 16) {
-                // Walking time
                 if let walk = mosque.walkingMinutes {
                     HStack(spacing: 4) {
                         Image(systemName: "figure.walk")
@@ -171,7 +174,6 @@ struct MosqueFinderView: View {
                     .foregroundColor(.white)
                 }
 
-                // Driving time
                 if let drive = mosque.drivingMinutes {
                     HStack(spacing: 4) {
                         Image(systemName: "car.fill")
@@ -184,7 +186,6 @@ struct MosqueFinderView: View {
 
                 Spacer()
 
-                // "Voir" button
                 HStack(spacing: 4) {
                     Text("Détails")
                         .font(.caption.bold())
@@ -194,17 +195,17 @@ struct MosqueFinderView: View {
                 .foregroundColor(Color(hex: "7C3AED"))
             }
 
-            // Countdown to next prayer if walking
+            // Alert if should leave now
             if let next = viewModel.nextPrayer, let walk = mosque.walkingMinutes {
                 let remaining = next.time.timeIntervalSince(Date())
                 let remainingMin = Int(remaining) / 60
                 let shouldLeaveNow = remainingMin <= walk + 5
 
-                if shouldLeaveNow {
+                if shouldLeaveNow && remaining > 0 {
                     HStack(spacing: 6) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.orange)
-                        Text(remainingMin <= walk ? "⚠️ Partez maintenant pour \(next.name) !" : "Partez dans \(remainingMin - walk) min pour arriver à temps")
+                        Text(remainingMin <= walk ? "⚠️ Partez maintenant pour \(next.name) !" : "Partez dans \(remainingMin - walk) min")
                             .font(.caption.bold())
                             .foregroundColor(remainingMin <= walk ? .red : .orange)
                     }
@@ -245,7 +246,6 @@ struct MosqueDetailView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Map preview
                         Map(coordinateRegion: .constant(MKCoordinateRegion(
                             center: mosque.coordinate,
                             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -256,7 +256,6 @@ struct MosqueDetailView: View {
                         .cornerRadius(16)
                         .allowsHitTesting(false)
 
-                        // Mosque info
                         VStack(alignment: .leading, spacing: 8) {
                             Text(mosque.name)
                                 .font(.title2.bold())
@@ -270,12 +269,10 @@ struct MosqueDetailView: View {
                         .background(Color(hex: "1A1A2E"))
                         .cornerRadius(16)
 
-                        // Travel times with countdown
                         if let next = nextPrayer {
                             travelTimesCard(nextPrayer: next)
                         }
 
-                        // Open in Maps
                         Button(action: openInMaps) {
                             HStack {
                                 Image(systemName: "map.fill")
@@ -313,7 +310,6 @@ struct MosqueDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack(spacing: 12) {
-                // Walking
                 if let walk = mosque.walkingMinutes {
                     let canMakeIt = remainingMin > walk
                     VStack(spacing: 6) {
@@ -326,7 +322,7 @@ struct MosqueDetailView: View {
                         Text("À pied")
                             .font(.caption)
                             .foregroundColor(Color(hex: "9090A0"))
-                        Text(canMakeIt ? "✓ Vous pouvez y aller" : "⚠️ Trop loin")
+                        Text(canMakeIt ? "✓ Possible" : "⚠️ Trop loin")
                             .font(.caption.bold())
                             .foregroundColor(canMakeIt ? .green : .red)
                     }
@@ -336,7 +332,6 @@ struct MosqueDetailView: View {
                     .cornerRadius(12)
                 }
 
-                // Driving
                 if let drive = mosque.drivingMinutes {
                     let canMakeIt = remainingMin > drive
                     VStack(spacing: 6) {
@@ -349,7 +344,7 @@ struct MosqueDetailView: View {
                         Text("En voiture")
                             .font(.caption)
                             .foregroundColor(Color(hex: "9090A0"))
-                        Text(canMakeIt ? "✓ Vous pouvez y aller" : "⚠️ Trop loin")
+                        Text(canMakeIt ? "✓ Possible" : "⚠️ Trop loin")
                             .font(.caption.bold())
                             .foregroundColor(canMakeIt ? .green : .red)
                     }
@@ -384,90 +379,110 @@ class MosqueFinderViewModel: ObservableObject {
     @Published var nextPrayer: (name: String, arabic: String, time: Date)?
 
     private let userLocation: CLLocation
-    private let calculator = PrayerTimesCalculator()
 
-    init(userLocation: CLLocation) {
+    init(userLocation: CLLocation, prayerTimes: PrayerTimes? = nil) {
         self.userLocation = userLocation
-        // Calculate next prayer
-        let times = calculator.calculate(
-            for: Date(),
-            latitude: userLocation.coordinate.latitude,
-            longitude: userLocation.coordinate.longitude
-        )
-        self.nextPrayer = times.nextPrayer
+        self.nextPrayer = prayerTimes?.nextPrayer
     }
 
     func searchMosques() async {
         isLoading = true
         mosques = []
 
-        // Use MKLocalSearch to find mosques (works offline-ish, uses Apple Maps data)
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = "mosque mosquée masjid"
-        request.region = MKCoordinateRegion(
-            center: userLocation.coordinate,
-            latitudinalMeters: 5000,
-            longitudinalMeters: 5000
-        )
+        // Search with multiple queries for better coverage
+        let queries = ["mosquée", "mosque", "masjid", "salle de prière musulmane"]
+        var allResults: [String: Mosque] = [:] // keyed by name to deduplicate
 
-        do {
-            let search = MKLocalSearch(request: request)
-            let response = try await search.start()
-
-            var results: [Mosque] = response.mapItems.compactMap { item in
-                guard let name = item.name else { return nil }
-                let coord = item.placemark.coordinate
-                let mosqueLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-                let distance = userLocation.distance(from: mosqueLocation)
-
-                return Mosque(
-                    name: name,
-                    address: item.placemark.title ?? "",
-                    coordinate: coord,
-                    distanceMeters: distance
-                )
-            }
-            .sorted { $0.distanceMeters < $1.distanceMeters }
-            .prefix(10)
-            .map { $0 }
-
-            // Calculate travel times for each mosque
-            for i in results.indices {
-                let mosqueLocation = CLLocation(
-                    latitude: results[i].coordinate.latitude,
-                    longitude: results[i].coordinate.longitude
-                )
-                let (walking, driving) = await calculateTravelTimes(to: mosqueLocation)
-                results[i].walkingMinutes = walking
-                results[i].drivingMinutes = driving
-            }
-
-            self.mosques = results
-        } catch {
-            // Fallback: search with broader query
-            let request2 = MKLocalSearch.Request()
-            request2.naturalLanguageQuery = "mosquée"
-            request2.region = MKCoordinateRegion(
+        for query in queries {
+            let request = MKLocalSearch.Request()
+            request.naturalLanguageQuery = query
+            request.region = MKCoordinateRegion(
                 center: userLocation.coordinate,
-                latitudinalMeters: 10000,
-                longitudinalMeters: 10000
+                latitudinalMeters: 8000,  // 8km radius
+                longitudinalMeters: 8000
             )
-            if let response2 = try? await MKLocalSearch(request: request2).start() {
-                mosques = response2.mapItems.compactMap { item in
-                    guard let name = item.name else { return nil }
-                    let coord = item.placemark.coordinate
-                    let mosqueLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-                    return Mosque(
-                        name: name,
-                        address: item.placemark.title ?? "",
-                        coordinate: coord,
-                        distanceMeters: userLocation.distance(from: mosqueLocation)
-                    )
-                }.sorted { $0.distanceMeters < $1.distanceMeters }.prefix(10).map { $0 }
+            // Filter to only place of worship category when available
+            if #available(iOS 16.0, *) {
+                request.pointOfInterestFilter = nil // Accept all to not miss any
+            }
+
+            if let response = try? await MKLocalSearch(request: request).start() {
+                for item in response.mapItems {
+                    guard let name = item.name else { continue }
+                    // Skip results that are clearly not mosques
+                    let lowName = name.lowercased()
+                    let isMosque = lowName.contains("mosquée") ||
+                                   lowName.contains("mosque") ||
+                                   lowName.contains("masjid") ||
+                                   lowName.contains("islamique") ||
+                                   lowName.contains("musulman") ||
+                                   lowName.contains("salle de prière") ||
+                                   lowName.contains("association cultuelle") ||
+                                   lowName.contains("centre culturel islam") ||
+                                   lowName.contains("al-") ||
+                                   lowName.contains("el-") ||
+                                   query == "mosquée" || query == "mosque" // Trust Apple Maps category for these
+
+                    if isMosque {
+                        let coord = item.placemark.coordinate
+                        let mosqueLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+                        let distance = userLocation.distance(from: mosqueLocation)
+
+                        // Only include mosques within 15km
+                        if distance <= 15000 {
+                            let key = "\(name)-\(String(format: "%.4f", coord.latitude))"
+                            if allResults[key] == nil {
+                                allResults[key] = Mosque(
+                                    name: name,
+                                    address: formatAddress(item.placemark),
+                                    coordinate: coord,
+                                    distanceMeters: distance
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 
+        // Sort by distance, take closest 15
+        var sorted = allResults.values.sorted { $0.distanceMeters < $1.distanceMeters }
+        sorted = Array(sorted.prefix(15))
+
+        // Calculate travel times for the 10 closest
+        let toCalculate = min(sorted.count, 10)
+        for i in 0..<toCalculate {
+            let mosqueLocation = CLLocation(
+                latitude: sorted[i].coordinate.latitude,
+                longitude: sorted[i].coordinate.longitude
+            )
+            let (walking, driving) = await calculateTravelTimes(to: mosqueLocation)
+            sorted[i].walkingMinutes = walking
+            sorted[i].drivingMinutes = driving
+        }
+
+        self.mosques = sorted
         isLoading = false
+    }
+
+    private func formatAddress(_ placemark: MKPlacemark) -> String {
+        var parts: [String] = []
+        if let street = placemark.thoroughfare {
+            if let number = placemark.subThoroughfare {
+                parts.append("\(number) \(street)")
+            } else {
+                parts.append(street)
+            }
+        }
+        if let postal = placemark.postalCode, let city = placemark.locality {
+            parts.append("\(postal) \(city)")
+        } else if let city = placemark.locality {
+            parts.append(city)
+        }
+        if let country = placemark.country, country != "France" {
+            parts.append(country)
+        }
+        return parts.joined(separator: ", ")
     }
 
     private func calculateTravelTimes(to destination: CLLocation) async -> (walking: Int?, driving: Int?) {
