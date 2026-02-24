@@ -57,7 +57,7 @@ jobs:
           PP_PATH=$RUNNER_TEMP/profile.mobileprovision
           echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > $PP_PATH
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/quranlock.mobileprovision
+          UUID=$(security cms -D -i $PP_PATH 2>/dev/null | grep -A1 UUID | tail -1 | sed "s/.*<string>\(.*\)<\/string>.*/\1/"); [ -z "$UUID" ] && UUID=quranlock; cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision; echo "Profile UUID: $UUID"
 
           echo "✅ Certificate and profile installed"
 
