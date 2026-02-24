@@ -21,3 +21,4 @@ Application iOS SwiftUI pour la lecture du Coran avec mode Ramadan intelligent.
 - **Bundle ID** : com.zetaentreprise.quranlock
 
 ## Par ZETA Entreprise © 2026
+ 
