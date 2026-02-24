@@ -1,19 +1,15 @@
 name: Build & Deploy to TestFlight
-
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: macos-14
     timeout-minutes: 60
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Select Xcode
         run: |
           if [ -d "/Applications/Xcode_16.1.app" ]; then
@@ -24,29 +20,23 @@ jobs:
             sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
           fi
           xcodebuild -version
-
       - name: Install xcodegen
         run: brew install xcodegen
-
       - name: Generate Xcode project
         run: xcodegen generate
-
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
-
       - name: Install Fastlane
         run: bundle install
-
       - name: Install certificate and provisioning profile
         env:
           PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
         run: |
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
           KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
-
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -54,13 +44,23 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH login.keychain-db
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
+          # Decode provisioning profile
           PP_PATH=$RUNNER_TEMP/profile.mobileprovision
           echo "$PROVISIONING_PROFILE_BASE64" | base64 --decode > $PP_PATH
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          UUID=$(security cms -D -i $PP_PATH 2>/dev/null | grep -A1 UUID | tail -1 | sed "s/.*<string>\(.*\)<\/string>.*/\1/"); [ -z "$UUID" ] && UUID=quranlock; cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision; echo "Profile UUID: $UUID"
+          echo "Profile size: $(wc -c < $PP_PATH) bytes"
 
+          # Extract UUID properly
+          UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(security cms -D -i $PP_PATH 2>/dev/null) 2>/dev/null)
+          if [ -z "$UUID" ]; then
+            echo "WARNING: Could not extract UUID, trying alternate method..."
+            UUID=$(security cms -D -i $PP_PATH 2>/dev/null | grep -A1 '<key>UUID</key>' | tail -1 | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
+          fi
+          echo "Profile UUID: $UUID"
+
+          # Install profile
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp "$PP_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
           echo "✅ Certificate and profile installed"
-
       - name: Build and Upload to TestFlight
         env:
           APP_STORE_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
@@ -70,7 +70,6 @@ jobs:
           mkdir -p ~/.appstoreconnect/private_keys
           echo "$APP_STORE_API_KEY_CONTENT" > ~/.appstoreconnect/private_keys/AuthKey_${APP_STORE_API_KEY_ID}.p8
           bundle exec fastlane beta
-
       - name: Cleanup keychain
         if: always()
         run: security delete-keychain $RUNNER_TEMP/app-signing.keychain-db || true

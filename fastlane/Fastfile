@@ -1,8 +1,6 @@
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "180"
 ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "6"
-
 default_platform(:ios)
-
 platform :ios do
   lane :beta do
     api_key = app_store_connect_api_key(
@@ -23,10 +21,14 @@ platform :ios do
       clean: true,
       output_directory: "./build",
       output_name: "QuranLock",
+      xcargs: "CODE_SIGNING_ALLOWED=NO",
       export_options: {
         method: "app-store",
         teamID: "J875R59LND",
-        signingStyle: "automatic"
+        signingStyle: "manual",
+        provisioningProfiles: {
+          "com.rezaimia.QuranLock" => "QuranLock AppStore New"
+        }
       }
     )
     upload_to_testflight(
