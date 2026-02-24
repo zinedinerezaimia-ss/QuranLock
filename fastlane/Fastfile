@@ -12,30 +12,23 @@ platform :ios do
       duration: 1200,
       in_house: false
     )
-
     increment_build_number(
       build_number: Time.now.strftime("%Y%m%d%H%M"),
       xcodeproj: "QuranLock.xcodeproj"
     )
-
     build_app(
       scheme: "QuranLock",
       export_method: "app-store",
       sdk: "iphoneos",
       clean: true,
       output_directory: "./build",
-      output_name: "QuranLock.ipa",
-      xcargs: "CODE_SIGNING_ALLOWED=NO",
+      output_name: "QuranLock",
       export_options: {
         method: "app-store",
         teamID: "J875R59LND",
-        signingStyle: "manual",
-        provisioningProfiles: {
-          "com.rezaimia.QuranLock" => "QuranLock AppStore New"
-        }
+        signingStyle: "automatic"
       }
     )
-
     upload_to_testflight(
       api_key: api_key,
       skip_waiting_for_build_processing: true,
