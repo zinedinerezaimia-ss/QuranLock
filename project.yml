@@ -29,7 +29,7 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.rezaimia.Quran-Lock
+        PRODUCT_BUNDLE_IDENTIFIER: com.rezaimia.QuranLock
         PRODUCT_NAME: Iqra
         MARKETING_VERSION: "2.0.0"
         CURRENT_PROJECT_VERSION: "1"
