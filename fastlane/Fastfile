@@ -31,7 +31,7 @@ platform :ios do
         teamID: "J875R59LND",
         signingStyle: "manual",
         provisioningProfiles: {
-          "com.rezaimia.QuranLock" => "QuranLock AppStore"
+          "com.rezaimia.QuranLock" => "QuranLock AppStore New"
         }
       }
     )
