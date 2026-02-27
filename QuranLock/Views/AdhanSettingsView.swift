@@ -16,7 +16,7 @@ struct AdhanSettingsView: View {
                 Spacer()
                 Toggle("", isOn: $adhan.adhanEnabled)
                     .tint(Theme.gold)
-                    .onChange(of: adhan.adhanEnabled) { _, enabled in
+                    .onChange(of: adhan.adhanEnabled) { enabled in
                         adhan.savePreferences()
                         if enabled { Task { await adhan.downloadAdhanIfNeeded() } }
                         else { adhan.cancelAllAdhan() }
