@@ -1,0 +1,168 @@
+name: Build & Deploy to App Store
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      # 1. Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Select Xcode
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+
+      # 3. Install XcodeGen
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # 4. Generate Xcode project
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      # 5. Import certificates and provisioning profile
+      - name: Import signing certificates
+        env:
+          P12_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          PROVISION_PROFILE_BASE64: ${{ secrets.PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # Validate secrets are not empty
+          if [ -z "$P12_BASE64" ]; then
+            echo "❌ ERROR: P12_BASE64 secret is empty!"
+            echo "Go to GitHub → Settings → Secrets → Actions"
+            echo "Add your .p12 certificate as base64"
+            exit 1
+          fi
+          if [ -z "$PROVISION_PROFILE_BASE64" ]; then
+            echo "❌ ERROR: PROVISION_PROFILE_BASE64 secret is empty!"
+            exit 1
+          fi
+          if [ -z "$KEYCHAIN_PASSWORD" ]; then
+            KEYCHAIN_PASSWORD="temporary_password_$(date +%s)"
+          fi
+
+          # Create keychain
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # Import certificate
+          echo -n "$P12_BASE64" | base64 --decode -o $RUNNER_TEMP/cert.p12
+
+          if [ -z "$P12_PASSWORD" ]; then
+            security import $RUNNER_TEMP/cert.p12 -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -P ""
+          else
+            security import $RUNNER_TEMP/cert.p12 -A -t cert -f pkcs12 -k $KEYCHAIN_PATH -P "$P12_PASSWORD"
+          fi
+
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # Import provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo -n "$PROVISION_PROFILE_BASE64" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+
+          echo "✅ Certificates and profile imported"
+
+      # 6. Resolve Swift packages
+      - name: Resolve packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project QuranLock.xcodeproj \
+            -scheme QuranLock \
+            -clonedSourcePackagesDirPath SourcePackages
+
+      # 7. Build archive
+      - name: Build archive
+        run: |
+          xcodebuild archive \
+            -project QuranLock.xcodeproj \
+            -scheme QuranLock \
+            -configuration Release \
+            -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
+            -destination "generic/platform=iOS" \
+            -clonedSourcePackagesDirPath SourcePackages \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_REQUIRED=YES \
+            CODE_SIGNING_ALLOWED=YES \
+            DEVELOPMENT_TEAM=J875R59LND \
+            PROVISIONING_PROFILE_SPECIFIER="QuranLock AppStore" \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            -allowProvisioningUpdates
+
+      # 8. Export IPA
+      - name: Export IPA
+        run: |
+          cat > $RUNNER_TEMP/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>J875R59LND</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>com.rezaimia.Quran-Lock</key>
+                  <string>QuranLock AppStore</string>
+              </dict>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>uploadBitcode</key>
+              <false/>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
+            -exportPath $RUNNER_TEMP/export \
+            -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist
+
+      # 9. Upload to App Store Connect
+      - name: Upload to App Store Connect
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_API_KEY_CONTENT }}
+        run: |
+          # If API key is set, use it
+          if [ -n "$APP_STORE_CONNECT_API_KEY" ]; then
+            echo -n "$APP_STORE_CONNECT_API_KEY" | base64 --decode > $RUNNER_TEMP/api_key.p8
+            xcrun altool --upload-app \
+              -f "$RUNNER_TEMP/export/Iqra.ipa" \
+              -t ios \
+              --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+              --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+              --private-key $RUNNER_TEMP/api_key.p8
+          else
+            echo "⚠️ App Store Connect API key not configured"
+            echo "The IPA was built successfully but not uploaded."
+            echo "Download the artifact below and upload manually via Transporter."
+          fi
+
+      # 10. Save IPA as artifact (backup)
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Iqra-IPA
+          path: ${{ runner.temp }}/export/*.ipa
+
+      # 11. Cleanup
+      - name: Cleanup keychain
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db 2>/dev/null || true
