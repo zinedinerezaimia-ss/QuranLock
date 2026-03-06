@@ -1,0 +1,102 @@
+{
+    "name": "QuranLock - Compagnon Spirituel",
+    "short_name": "QuranLock",
+    "description": "Votre compagnon spirituel islamique complet",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a1628",
+    "theme_color": "#d4af37",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "assets/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["education", "lifestyle", "religion"],
+    "lang": "fr",
+    "dir": "ltr",
+    "shortcuts": [
+        {
+            "name": "Lire le Coran",
+            "short_name": "Coran",
+            "description": "Ouvrir le lecteur de Coran",
+            "url": "/?page=quran",
+            "icons": [{ "src": "assets/icons/quran-icon.png", "sizes": "96x96" }]
+        },
+        {
+            "name": "Duaas",
+            "short_name": "Duaas",
+            "description": "Voir les invocations",
+            "url": "/?page=duaa",
+            "icons": [{ "src": "assets/icons/duaa-icon.png", "sizes": "96x96" }]
+        },
+        {
+            "name": "Dhikr",
+            "short_name": "Dhikr",
+            "description": "Compteur de Dhikr",
+            "url": "/?page=dhikr",
+            "icons": [{ "src": "assets/icons/dhikr-icon.png", "sizes": "96x96" }]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/screenshots/home.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Accueil QuranLock"
+        },
+        {
+            "src": "assets/screenshots/quran.png",
+            "sizes": "1080x1920",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Lecteur de Coran"
+        }
+    ]
+}

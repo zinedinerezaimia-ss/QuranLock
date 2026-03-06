@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="QuranLock - Rapproche-toi du Coran avec lecture, apprentissage et communauté">
+    <meta name="theme-color" content="#0a1628">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>QuranLock - Ton Compagnon Spirituel</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="app-loader" class="loader-screen">
+        <div class="loader-content">
+            <div class="loader-icon">🕌</div>
+            <div class="loader-text">QuranLock</div>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app" class="app-container hidden">
+        
+        <!-- ==================== ONBOARDING ==================== -->
+        <section id="onboarding-screen" class="screen onboarding hidden">
+            <div class="onboarding-slides">
+                <div class="onboarding-slide active" data-slide="0">
+                    <div class="slide-icon">🕌</div>
+                    <h1>Bienvenue sur QuranLock</h1>
+                    <p>Ton compagnon spirituel pour te rapprocher d'Allah</p>
+                </div>
+                <div class="onboarding-slide" data-slide="1">
+                    <div class="slide-icon">📖</div>
+                    <h1>Lis le Coran</h1>
+                    <p>114 sourates avec texte arabe et phonétique. Enregistre ta récitation et reçois un feedback personnalisé.</p>
+                </div>
+                <div class="onboarding-slide" data-slide="2">
+                    <div class="slide-icon">🎓</div>
+                    <h1>Apprends l'Arabe</h1>
+                    <p>Des cours adaptés à ton rythme, de 10 jours à 2 ans. Quiz et exercices pour progresser.</p>
+                </div>
+                <div class="onboarding-slide" data-slide="3">
+                    <div class="slide-icon">👥</div>
+                    <h1>Rejoins la Communauté</h1>
+                    <p>Partage tes réflexions, défie tes amis et grandis ensemble dans la foi.</p>
+                </div>
+                <div class="onboarding-slide" data-slide="4">
+                    <div class="slide-icon">✨</div>
+                    <h1>Prêt pour ton voyage ?</h1>
+                    <p>Que ta journée soit bénie. Commençons ensemble.</p>
+                </div>
+            </div>
+            <div class="onboarding-dots">
+                <span class="dot active" data-dot="0"></span>
+                <span class="dot" data-dot="1"></span>
+                <span class="dot" data-dot="2"></span>
+                <span class="dot" data-dot="3"></span>
+                <span class="dot" data-dot="4"></span>
+            </div>
+            <div class="onboarding-actions">
+                <button class="btn-skip" id="skip-onboarding">Passer</button>
+                <button class="btn-next" id="next-onboarding">Suivant</button>
+            </div>
+        </section>
+
+        <!-- ==================== AUTH SCREEN ==================== -->
+        <section id="auth-screen" class="screen auth-screen hidden">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <span class="logo-icon">🕌</span>
+                        <h1 class="logo-text">QuranLock</h1>
+                    </div>
+                    <p class="auth-tagline">Rapproche-toi du Coran</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Connexion</button>
+                    <button class="auth-tab" data-tab="register">Inscription</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form active">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required placeholder="ton@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Se connecter</button>
+                    <button type="button" class="btn-google" id="google-login">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continuer avec Google
+                    </button>
+                    <a href="#" class="forgot-password" id="forgot-password-link">Mot de passe oublié ?</a>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-name">Prénom</label>
+                        <input type="text" id="register-name" required placeholder="Ton prénom">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required placeholder="ton@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Mot de passe</label>
+                        <input type="password" id="register-password" required placeholder="Min. 8 caractères" minlength="8">
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="accept-terms" required>
+                        <label for="accept-terms">J'accepte les <a href="#" onclick="showLegal('terms')">CGU</a> et la <a href="#" onclick="showLegal('privacy')">politique de confidentialité</a></label>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Créer mon compte</button>
+                    <button type="button" class="btn-google" id="google-register">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        S'inscrire avec Google
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>© 2026 ZETA - Tous droits réservés</p>
+                    <div class="legal-links">
+                        <a href="#" onclick="showLegal('mentions')">Mentions légales</a>
+                        <a href="#" onclick="showLegal('privacy')">Confidentialité</a>
+                        <a href="#" onclick="showLegal('cookies')">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MAIN APP ==================== -->
+        <main id="main-app" class="main-app hidden">
+            
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <span class="header-logo">🕌</span>
+                    <span class="header-title">QuranLock</span>
+                </div>
+                <div class="header-right">
+                    <div class="streak-badge" id="header-streak">
+                        <span class="streak-icon">🔥</span>
+                        <span class="streak-count">0</span>
+                    </div>
+                    <button class="header-btn" id="notifications-btn">🔔</button>
+                </div>
+            </header>
+
+            <!-- Pages Container -->
+            <div class="pages-container">
+                
+                <!-- ========== HOME PAGE ========== -->
+                <div id="page-home" class="page active">
+                    <div class="page-content">
+                        <div class="welcome-section">
+                            <h1 class="welcome-greeting" id="welcome-greeting">Salam عليكم</h1>
+                            <p class="welcome-message">Que ta journée soit bénie</p>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card streak-card">
+                                <div class="stat-icon">🔥</div>
+                                <div class="stat-value" id="home-streak">0</div>
+                                <div class="stat-label">Jours de streak</div>
+                            </div>
+                            <div class="stat-card progress-card">
+                                <div class="stat-icon">📖</div>
+                                <div class="stat-value" id="home-progress">0/114</div>
+                                <div class="stat-label">Sourates lues</div>
+                            </div>
+                        </div>
+
+                        <div class="next-surah-card" id="next-surah-card">
+                            <div class="card-header">
+                                <h3>📖 Prochaine sourate</h3>
+                            </div>
+                            <div class="surah-preview">
+                                <div class="surah-number">1</div>
+                                <div class="surah-info">
+                                    <h4 class="surah-name">Al-Fatiha</h4>
+                                    <p class="surah-arabic">الفاتحة</p>
+                                </div>
+                                <button class="btn-read" onclick="goToSurah(1)">Lire →</button>
+                            </div>
+                        </div>
+
+                        <div class="challenge-card" id="daily-challenge">
+                            <div class="card-header">
+                                <h3>🎲 Challenge du jour</h3>
+                                <button class="btn-refresh" onclick="refreshChallenge()">↻</button>
+                            </div>
+                            <div class="challenge-content">
+                                <p id="challenge-text">Récite Ayat Al-Kursi 3 fois</p>
+                                <button class="btn-secondary" id="complete-challenge">Marquer comme fait ✓</button>
+                            </div>
+                        </div>
+
+                        <div class="hadith-card">
+                            <div class="card-header">
+                                <h3>📚 Hadith du jour</h3>
+                            </div>
+                            <div class="hadith-content" id="daily-hadith">
+                                <p class="hadith-text">"Les actes ne valent que par les intentions..."</p>
+                                <p class="hadith-source">- Sahih Al-Bukhari</p>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <button class="quick-action" onclick="navigateTo('duaas')">
+                                <span class="action-icon">🤲</span>
+                                <span class="action-label">Duaas</span>
+                            </button>
+                            <button class="quick-action" onclick="navigateTo('dhikr')">
+                                <span class="action-icon">📿</span>
+                                <span class="action-label">Dhikr</span>
+                            </button>
+                            <button class="quick-action" onclick="navigateTo('names')">
+                                <span class="action-icon">✨</span>
+                                <span class="action-label">99 Noms</span>
+                            </button>
+                            <button class="quick-action" onclick="navigateTo('assistant')">
+                                <span class="action-icon">🔍</span>
+                                <span class="action-label">Assistant</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== QURAN PAGE ========== -->
+                <div id="page-quran" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>📖 Le Saint Coran</h2>
+                            <div class="reading-mode-toggle">
+                                <button class="mode-btn active" data-mode="arabic">عربي</button>
+                                <button class="mode-btn" data-mode="phonetic">Phonétique</button>
+                                <button class="mode-btn" data-mode="both">Les deux</button>
+                            </div>
+                        </div>
+
+                        <div class="search-bar">
+                            <input type="text" id="surah-search" placeholder="Rechercher une sourate...">
+                            <span class="search-icon">🔍</span>
+                        </div>
+
+                        <div class="surah-list" id="surah-list">
+                            <!-- Surahs loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SURAH READER ========== -->
+                <div id="page-surah-reader" class="page">
+                    <div class="page-content surah-reader-content">
+                        <div class="reader-header">
+                            <button class="btn-back" onclick="navigateTo('quran')">← Retour</button>
+                            <div class="reader-title">
+                                <h2 id="reader-surah-name">Al-Fatiha</h2>
+                                <p id="reader-surah-arabic">الفاتحة</p>
+                            </div>
+                            <button class="btn-lock" id="lock-mode-btn" title="Mode Lock">🔒</button>
+                        </div>
+
+                        <div class="reader-info">
+                            <span id="reader-revelation">Mecquoise</span>
+                            <span id="reader-verses">7 versets</span>
+                        </div>
+
+                        <div class="bismillah" id="bismillah">
+                            <p class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                            <p class="phonetic">Bismillahi ar-Rahmani ar-Raheem</p>
+                        </div>
+
+                        <div class="verses-container" id="verses-container">
+                            <!-- Verses loaded dynamically -->
+                        </div>
+
+                        <div class="reader-actions">
+                            <button class="action-btn" id="record-btn" onclick="toggleRecording()">
+                                <span class="btn-icon">🎤</span>
+                                <span class="btn-text">Enregistrer</span>
+                            </button>
+                            <button class="action-btn" id="share-btn" onclick="shareRecitation()">
+                                <span class="btn-icon">📤</span>
+                                <span class="btn-text">Partager</span>
+                            </button>
+                            <button class="action-btn" onclick="showReflections()">
+                                <span class="btn-icon">💭</span>
+                                <span class="btn-text">Réflexions</span>
+                            </button>
+                        </div>
+
+                        <button class="btn-primary btn-full mark-complete-btn" id="mark-complete" onclick="markSurahComplete()">
+                            ✓ Marquer comme lu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ========== LEARN PAGE ========== -->
+                <div id="page-learn" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>🎓 Apprendre</h2>
+                        </div>
+
+                        <div class="learn-tabs">
+                            <button class="learn-tab active" data-tab="courses">Cours d'Arabe</button>
+                            <button class="learn-tab" data-tab="quiz">Quiz Islam</button>
+                        </div>
+
+                        <!-- Arabic Courses Section -->
+                        <div id="courses-section" class="learn-section active">
+                            <div class="course-selection" id="course-selection">
+                                <h3>Choisis ton programme</h3>
+                                <div class="duration-grid">
+                                    <button class="duration-card" data-duration="10">
+                                        <span class="duration-value">10</span>
+                                        <span class="duration-label">jours</span>
+                                        <span class="duration-desc">Bases rapides</span>
+                                    </button>
+                                    <button class="duration-card" data-duration="30">
+                                        <span class="duration-value">30</span>
+                                        <span class="duration-label">jours</span>
+                                        <span class="duration-desc">Fondamentaux</span>
+                                    </button>
+                                    <button class="duration-card" data-duration="60">
+                                        <span class="duration-value">60</span>
+                                        <span class="duration-label">jours</span>
+                                        <span class="duration-desc">Intermédiaire</span>
+                                    </button>
+                                    <button class="duration-card" data-duration="180">
+                                        <span class="duration-value">6</span>
+                                        <span class="duration-label">mois</span>
+                                        <span class="duration-desc">Approfondi</span>
+                                    </button>
+                                    <button class="duration-card" data-duration="365">
+                                        <span class="duration-value">1</span>
+                                        <span class="duration-label">an</span>
+                                        <span class="duration-desc">Maîtrise</span>
+                                    </button>
+                                    <button class="duration-card" data-duration="730">
+                                        <span class="duration-value">2</span>
+                                        <span class="duration-label">ans</span>
+                                        <span class="duration-desc">Expert</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="course-progress hidden" id="course-progress">
+                                <div class="progress-header">
+                                    <h3>Ton parcours</h3>
+                                    <span class="progress-badge" id="course-day">Jour 1</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="course-progress-bar" style="width: 0%"></div>
+                                </div>
+                                <p class="progress-text" id="course-progress-text">0% complété</p>
+                            </div>
+
+                            <div class="lessons-list" id="lessons-list">
+                                <!-- Lessons loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Quiz Section -->
+                        <div id="quiz-section" class="learn-section">
+                            <div class="quiz-levels">
+                                <button class="level-card" data-level="beginner">
+                                    <span class="level-icon">🌱</span>
+                                    <span class="level-name">Débutant</span>
+                                    <span class="level-questions">500+ questions</span>
+                                </button>
+                                <button class="level-card" data-level="intermediate">
+                                    <span class="level-icon">🌿</span>
+                                    <span class="level-name">Intermédiaire</span>
+                                    <span class="level-questions">800+ questions</span>
+                                </button>
+                                <button class="level-card" data-level="advanced">
+                                    <span class="level-icon">🌳</span>
+                                    <span class="level-name">Avancé</span>
+                                    <span class="level-questions">700+ questions</span>
+                                </button>
+                            </div>
+
+                            <div class="quiz-categories" id="quiz-categories">
+                                <h3>Catégories</h3>
+                                <div class="category-grid">
+                                    <button class="category-btn" data-category="quran">📖 Coran</button>
+                                    <button class="category-btn" data-category="hadith">📚 Hadiths</button>
+                                    <button class="category-btn" data-category="fiqh">⚖️ Fiqh</button>
+                                    <button class="category-btn" data-category="history">🏛️ Histoire</button>
+                                    <button class="category-btn" data-category="prophets">👤 Prophètes</button>
+                                    <button class="category-btn" data-category="pillars">🕌 Piliers</button>
+                                </div>
+                            </div>
+
+                            <div class="quiz-stats" id="quiz-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="quiz-correct">0</span>
+                                    <span class="stat-label">Bonnes réponses</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="quiz-total">0</span>
+                                    <span class="stat-label">Questions</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== QUIZ GAME ========== -->
+                <div id="page-quiz-game" class="page">
+                    <div class="page-content">
+                        <div class="quiz-header">
+                            <button class="btn-back" onclick="navigateTo('learn')">← Retour</button>
+                            <div class="quiz-score">
+                                <span id="current-score">0</span>/<span id="total-questions">10</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-card" id="quiz-card">
+                            <div class="question-number">Question <span id="question-num">1</span></div>
+                            <p class="question-text" id="question-text"></p>
+                            <div class="answers-grid" id="answers-grid">
+                                <!-- Answers loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="quiz-explanation hidden" id="quiz-explanation">
+                            <h4>Explication</h4>
+                            <p id="explanation-text"></p>
+                        </div>
+
+                        <button class="btn-primary btn-full hidden" id="next-question-btn" onclick="nextQuestion()">
+                            Question suivante →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ========== LESSON PAGE ========== -->
+                <div id="page-lesson" class="page">
+                    <div class="page-content">
+                        <div class="lesson-header">
+                            <button class="btn-back" onclick="navigateTo('learn')">← Retour</button>
+                            <span class="lesson-badge" id="lesson-day">Jour 1</span>
+                        </div>
+
+                        <div class="lesson-content" id="lesson-content">
+                            <!-- Lesson content loaded dynamically -->
+                        </div>
+
+                        <div class="lesson-actions">
+                            <button class="btn-secondary" id="download-lesson">📥 Télécharger la fiche</button>
+                            <button class="btn-primary btn-full" id="start-lesson-quiz">Faire le quiz →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SPIRITUAL PAGE ========== -->
+                <div id="page-spiritual" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>🤲 Spiritualité</h2>
+                        </div>
+
+                        <div class="spiritual-grid">
+                            <button class="spiritual-card" onclick="navigateTo('duaas')">
+                                <span class="card-icon">🤲</span>
+                                <h3>Duaas</h3>
+                                <p>150+ invocations</p>
+                            </button>
+                            <button class="spiritual-card" onclick="navigateTo('dhikr')">
+                                <span class="card-icon">📿</span>
+                                <h3>Dhikr</h3>
+                                <p>Compteur Tasbih</p>
+                            </button>
+                            <button class="spiritual-card" onclick="navigateTo('names')">
+                                <span class="card-icon">✨</span>
+                                <h3>99 Noms</h3>
+                                <p>Noms d'Allah</p>
+                            </button>
+                            <button class="spiritual-card" onclick="navigateTo('hadith')">
+                                <span class="card-icon">📚</span>
+                                <h3>Hadiths</h3>
+                                <p>Paroles du Prophète ﷺ</p>
+                            </button>
+                            <button class="spiritual-card" onclick="navigateTo('tafsir')">
+                                <span class="card-icon">📖</span>
+                                <h3>Tafsir</h3>
+                                <p>Exégèse coranique</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DUAAS PAGE ========== -->
+                <div id="page-duaas" class="page">
+                    <div class="page-content">
+                        <div class="sub-header">
+                            <button class="btn-back" onclick="navigateTo('spiritual')">← Retour</button>
+                            <h2>🤲 Duaas</h2>
+                        </div>
+
+                        <div class="duaa-categories">
+                            <button class="duaa-cat-btn active" data-category="all">Toutes</button>
+                            <button class="duaa-cat-btn" data-category="morning">Matin</button>
+                            <button class="duaa-cat-btn" data-category="evening">Soir</button>
+                            <button class="duaa-cat-btn" data-category="prayer">Prière</button>
+                            <button class="duaa-cat-btn" data-category="daily">Quotidien</button>
+                            <button class="duaa-cat-btn" data-category="emotions">Émotions</button>
+                        </div>
+
+                        <div class="duaas-list" id="duaas-list">
+                            <!-- Duaas loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== DHIKR PAGE ========== -->
+                <div id="page-dhikr" class="page">
+                    <div class="page-content dhikr-content">
+                        <div class="sub-header">
+                            <button class="btn-back" onclick="navigateTo('spiritual')">← Retour</button>
+                            <h2>📿 Dhikr</h2>
+                        </div>
+
+                        <div class="dhikr-selector">
+                            <button class="dhikr-type active" data-dhikr="subhanallah">
+                                <span class="dhikr-arabic">سُبْحَانَ اللَّهِ</span>
+                                <span class="dhikr-trans">SubhanAllah</span>
+                            </button>
+                            <button class="dhikr-type" data-dhikr="alhamdulillah">
+                                <span class="dhikr-arabic">الْحَمْدُ لِلَّهِ</span>
+                                <span class="dhikr-trans">Alhamdulillah</span>
+                            </button>
+                            <button class="dhikr-type" data-dhikr="allahuakbar">
+                                <span class="dhikr-arabic">اللَّهُ أَكْبَرُ</span>
+                                <span class="dhikr-trans">Allahu Akbar</span>
+                            </button>
+                        </div>
+
+                        <div class="dhikr-counter">
+                            <div class="counter-display" id="dhikr-count">0</div>
+                            <div class="counter-target">/ <span id="dhikr-target">33</span></div>
+                        </div>
+
+                        <button class="dhikr-btn" id="dhikr-btn" onclick="incrementDhikr()">
+                            <span class="dhikr-btn-text">Tap</span>
+                        </button>
+
+                        <div class="dhikr-actions">
+                            <button class="btn-secondary" onclick="resetDhikr()">Réinitialiser</button>
+                            <select id="dhikr-target-select" onchange="setDhikrTarget(this.value)">
+                                <option value="33">33</option>
+                                <option value="99">99</option>
+                                <option value="100">100</option>
+                                <option value="1000">1000</option>
+                            </select>
+                        </div>
+
+                        <div class="dhikr-history">
+                            <h3>Historique du jour</h3>
+                            <div id="dhikr-history-list">
+                                <!-- History loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== 99 NAMES PAGE ========== -->
+                <div id="page-names" class="page">
+                    <div class="page-content">
+                        <div class="sub-header">
+                            <button class="btn-back" onclick="navigateTo('spiritual')">← Retour</button>
+                            <h2>✨ Les 99 Noms d'Allah</h2>
+                        </div>
+
+                        <div class="names-grid" id="names-grid">
+                            <!-- Names loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== ASSISTANT PAGE ========== -->
+                <div id="page-assistant" class="page">
+                    <div class="page-content assistant-content">
+                        <div class="page-header">
+                            <h2>🔍 Assistant Islamique</h2>
+                            <p>Pose ta question ou partage ta situation</p>
+                        </div>
+
+                        <div class="assistant-chat" id="assistant-chat">
+                            <div class="chat-message assistant">
+                                <div class="message-content">
+                                    <p>Salam ! Je suis là pour t'aider avec des conseils basés sur le Coran et les Hadiths. Comment puis-je t'aider aujourd'hui ?</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="assistant-suggestions">
+                            <button class="suggestion-btn" onclick="askAssistant('Je me sens triste et seul')">😔 Je me sens triste</button>
+                            <button class="suggestion-btn" onclick="askAssistant('Comment gérer ma colère ?')">😤 Gérer la colère</button>
+                            <button class="suggestion-btn" onclick="askAssistant('Comment renforcer ma foi ?')">🤲 Renforcer ma foi</button>
+                        </div>
+
+                        <div class="assistant-input">
+                            <textarea id="assistant-question" placeholder="Écris ta question ici..." rows="2"></textarea>
+                            <button class="btn-send" onclick="sendAssistantQuestion()">➤</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== COMMUNITY PAGE ========== -->
+                <div id="page-community" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>👥 Communauté</h2>
+                        </div>
+
+                        <div class="community-tabs">
+                            <button class="community-tab active" data-tab="leaderboard">🏆 Classement</button>
+                            <button class="community-tab" data-tab="friends">👥 Amis</button>
+                            <button class="community-tab" data-tab="shared">📤 Partages</button>
+                        </div>
+
+                        <!-- Leaderboard -->
+                        <div id="leaderboard-section" class="community-section active">
+                            <div class="leaderboard-list" id="leaderboard-list">
+                                <!-- Leaderboard loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Friends -->
+                        <div id="friends-section" class="community-section">
+                            <div class="friend-code-section">
+                                <p>Ton code ami :</p>
+                                <div class="friend-code" id="my-friend-code">XXXXX</div>
+                                <button class="btn-secondary" onclick="copyFriendCode()">Copier</button>
+                            </div>
+                            <div class="add-friend">
+                                <input type="text" id="friend-code-input" placeholder="Code ami" maxlength="6">
+                                <button class="btn-primary" onclick="addFriend()">Ajouter</button>
+                            </div>
+                            <div class="friends-list" id="friends-list">
+                                <!-- Friends loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Shared Recordings -->
+                        <div id="shared-section" class="community-section">
+                            <div class="shared-list" id="shared-list">
+                                <!-- Shared recordings loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SADAQA PAGE ========== -->
+                <div id="page-sadaqa" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>💰 Sadaqa</h2>
+                            <p>Fais le bien, récolte le bien</p>
+                        </div>
+
+                        <!-- Developer Support -->
+                        <div class="donation-card featured">
+                            <div class="donation-header">
+                                <span class="donation-icon">☕</span>
+                                <h3>Soutenir QuranLock</h3>
+                            </div>
+                            <p class="donation-desc">50% des dons transformés en repas pour ceux dans le besoin</p>
+                            <a href="https://buymeacoffee.com/quranlock" target="_blank" class="btn-primary btn-full">
+                                Buy Me a Coffee ☕
+                            </a>
+                            <p class="donation-note">
+                                📱 Ajoute +33767282133 sur WhatsApp pour suivre le processus
+                            </p>
+                        </div>
+
+                        <!-- iOS Cagnotte -->
+                        <div class="donation-card">
+                            <div class="donation-header">
+                                <span class="donation-icon">📱</span>
+                                <h3>Cagnotte App iOS</h3>
+                            </div>
+                            <p class="donation-desc">Aide-nous à développer la version iPhone</p>
+                            <div class="cagnotte-progress">
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="ios-progress" style="width: 0%"></div>
+                                </div>
+                                <p class="progress-text"><span id="ios-amount">0</span>€ / 300€</p>
+                            </div>
+                            <button class="btn-secondary btn-full" onclick="contributeIOS()">Contribuer</button>
+                        </div>
+
+                        <!-- LaunchGood Causes -->
+                        <div class="causes-section">
+                            <h3>🌍 Causes humanitaires</h3>
+                            <div class="causes-grid">
+                                <a href="https://www.launchgood.com/campaign/water_for_gaza" target="_blank" class="cause-card">
+                                    <span class="cause-icon">💧</span>
+                                    <span class="cause-name">Eau Gaza</span>
+                                </a>
+                                <a href="https://www.launchgood.com/campaign/orphans_palestine" target="_blank" class="cause-card">
+                                    <span class="cause-icon">🧒</span>
+                                    <span class="cause-name">Orphelins Palestine</span>
+                                </a>
+                                <a href="https://www.launchgood.com/campaign/lebanon_relief" target="_blank" class="cause-card">
+                                    <span class="cause-icon">🇱🇧</span>
+                                    <span class="cause-name">Liban</span>
+                                </a>
+                                <a href="https://www.launchgood.com/campaign/sudan_emergency" target="_blank" class="cause-card">
+                                    <span class="cause-icon">🆘</span>
+                                    <span class="cause-name">Urgence Soudan</span>
+                                </a>
+                                <a href="https://www.launchgood.com/campaign/afghan_women" target="_blank" class="cause-card">
+                                    <span class="cause-icon">👩</span>
+                                    <span class="cause-name">Femmes afghanes</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Engagement Mode -->
+                        <div class="donation-card engagement-card">
+                            <div class="donation-header">
+                                <span class="donation-icon">⚡</span>
+                                <h3>Mode Engagement Sadaqa</h3>
+                            </div>
+                            <p class="donation-desc">Si tu triches ou skip, le montant est donné automatiquement !</p>
+                            <div class="engagement-setup">
+                                <input type="number" id="engagement-amount" placeholder="Montant (€)" min="1">
+                                <button class="btn-primary" id="enable-engagement">Activer</button>
+                            </div>
+                            <p class="engagement-status hidden" id="engagement-status">
+                                Mode actif : <span id="engagement-value">0</span>€ en jeu
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== SETTINGS PAGE ========== -->
+                <div id="page-settings" class="page">
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h2>⚙️ Paramètres</h2>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>👤 Compte</h3>
+                            <div class="settings-item">
+                                <span class="setting-label">Email</span>
+                                <span class="setting-value" id="user-email">-</span>
+                            </div>
+                            <div class="settings-item">
+                                <span class="setting-label">Prénom</span>
+                                <input type="text" id="user-name-setting" class="setting-input">
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>🌍 Langue</h3>
+                            <div class="language-selector">
+                                <button class="lang-btn active" data-lang="fr">🇫🇷 Français</button>
+                                <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+                                <button class="lang-btn" data-lang="ar">🇸🇦 عربي</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>🔒 Mode Lock</h3>
+                            <p class="setting-desc">Code pour sortir de la lecture (défaut: 1234)</p>
+                            <div class="lock-code-setting">
+                                <input type="password" id="lock-code" placeholder="Code à 4 chiffres" maxlength="4">
+                                <button class="btn-secondary" onclick="saveLockCode()">Sauvegarder</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>📖 Lecture</h3>
+                            <div class="settings-item toggle-item">
+                                <span class="setting-label">Mode sombre</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="dark-mode-toggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item toggle-item">
+                                <span class="setting-label">Notifications</span>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notifications-toggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>💡 Suggestions</h3>
+                            <p class="setting-desc">Une idée ? Un bug ? Dis-nous !</p>
+                            <div class="suggestion-form">
+                                <select id="suggestion-category">
+                                    <option value="feature">Nouvelle fonctionnalité</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="improvement">Amélioration</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                                <textarea id="suggestion-text" placeholder="Décris ton idée..." rows="3"></textarea>
+                                <button class="btn-primary" onclick="submitSuggestion()">Envoyer</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section danger-zone">
+                            <h3>⚠️ Zone dangereuse</h3>
+                            <button class="btn-danger" onclick="exportData()">📤 Exporter mes données</button>
+                            <button class="btn-danger" onclick="deleteAccount()">🗑️ Supprimer mon compte</button>
+                            <button class="btn-danger" onclick="logout()">🚪 Déconnexion</button>
+                        </div>
+
+                        <div class="settings-footer">
+                            <p>© 2026 ZETA - Tous droits réservés</p>
+                            <div class="legal-links">
+                                <a href="#" onclick="showLegal('mentions')">Mentions légales</a>
+                                <a href="#" onclick="showLegal('privacy')">Confidentialité</a>
+                                <a href="#" onclick="showLegal('terms')">CGU</a>
+                                <a href="#" onclick="showLegal('cookies')">Cookies</a>
+                            </div>
+                            <p class="version">QuranLock v5.0</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-item active" data-page="home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Accueil</span>
+                </button>
+                <button class="nav-item" data-page="quran">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-label">Coran</span>
+                </button>
+                <button class="nav-item" data-page="learn">
+                    <span class="nav-icon">🎓</span>
+                    <span class="nav-label">Apprendre</span>
+                </button>
+                <button class="nav-item" data-page="spiritual">
+                    <span class="nav-icon">🤲</span>
+                    <span class="nav-label">Spirituel</span>
+                </button>
+                <button class="nav-item" data-page="community">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-label">Communauté</span>
+                </button>
+                <button class="nav-item" data-page="sadaqa">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-label">Sadaqa</span>
+                </button>
+                <button class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">Plus</span>
+                </button>
+            </nav>
+        </main>
+
+        <!-- ==================== MODALS ==================== -->
+        
+        <!-- Legal Modal -->
+        <div id="legal-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="legal-title">Mentions légales</h2>
+                    <button class="modal-close" onclick="closeLegalModal()">×</button>
+                </div>
+                <div class="modal-body" id="legal-content">
+                    <!-- Legal content loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lock Mode Modal -->
+        <div id="lock-modal" class="modal hidden">
+            <div class="modal-content lock-modal-content">
+                <div class="lock-icon">🔒</div>
+                <h2>Mode Lock actif</h2>
+                <p>Entre ton code pour sortir</p>
+                <input type="password" id="unlock-code" placeholder="Code" maxlength="4">
+                <button class="btn-primary" onclick="tryUnlock()">Déverrouiller</button>
+                <p class="lock-warning">⚠️ Skip = perte du streak</p>
+            </div>
+        </div>
+
+        <!-- Recording Feedback Modal -->
+        <div id="feedback-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🎤 Analyse de ta récitation</h2>
+                    <button class="modal-close" onclick="closeFeedbackModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="feedback-score">
+                        <div class="score-circle" id="pronunciation-score">85%</div>
+                        <p>Score de prononciation</p>
+                    </div>
+                    <div class="feedback-details" id="feedback-details">
+                        <!-- Feedback loaded dynamically -->
+                    </div>
+                    <div class="feedback-actions">
+                        <button class="btn-secondary" onclick="closeFeedbackModal()">Fermer</button>
+                        <button class="btn-primary" onclick="shareRecording()">Partager 📤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflections Modal -->
+        <div id="reflections-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>💭 Réflexions</h2>
+                    <button class="modal-close" onclick="closeReflectionsModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="reflection-input">
+                        <textarea id="reflection-text" placeholder="Qu'as-tu compris de cette sourate ?"></textarea>
+                        <button class="btn-primary" onclick="submitReflection()">Partager</button>
+                    </div>
+                    <div class="reflections-list" id="reflections-list">
+                        <!-- Reflections loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container"></div>
+
+        <!-- Cookie Banner -->
+        <div id="cookie-banner" class="cookie-banner hidden">
+            <p>🍪 Ce site utilise des cookies pour améliorer ton expérience.</p>
+            <div class="cookie-actions">
+                <button class="btn-secondary" onclick="showLegal('cookies')">En savoir plus</button>
+                <button class="btn-primary" onclick="acceptCookies()">Accepter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- FORCE LOAD - Au cas où le JS crash -->
+    <script>
+        // Forcer l'affichage après 2 secondes max
+        setTimeout(function() {
+            var loader = document.getElementById('app-loader');
+            var app = document.getElementById('app');
+            var mainApp = document.getElementById('main-app');
+            
+            if (loader) loader.style.display = 'none';
+            if (app) app.classList.remove('hidden');
+            if (mainApp) mainApp.classList.remove('hidden');
+            
+            console.log('⚡ Force load executed');
+        }, 2000);
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
