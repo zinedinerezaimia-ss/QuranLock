@@ -14,7 +14,7 @@ struct ContentView: View {
                 }
                 .tag(0)
 
-            QuranReadingView()
+            QuranHomeView()
                 .tabItem {
                     Image(systemName: "book.fill")
                     Text(L.quran)
