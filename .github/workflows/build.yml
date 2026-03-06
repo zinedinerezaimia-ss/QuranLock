@@ -19,10 +19,6 @@ jobs:
       - name: Select Xcode 16
         run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
-      # 3. Install iOS platform SDK
-      - name: Install iOS platform
-        run: |
-          sudo xcodebuild -downloadPlatform iOS
 
       # 4. Install XcodeGen
       - name: Install XcodeGen
@@ -89,7 +85,7 @@ jobs:
             -scheme QuranLock \
             -configuration Release \
             -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
-            -destination "generic/platform=iOS" \
+            -sdk iphoneos \
             -clonedSourcePackagesDirPath SourcePackages \
             DEVELOPMENT_TEAM=J875R59LND \
 
