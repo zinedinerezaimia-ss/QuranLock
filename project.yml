@@ -1,5 +1,4 @@
 name: QuranLock
-
 options:
   bundleIdPrefix: com.rezaimia
   deploymentTarget:
@@ -7,19 +6,16 @@ options:
   xcodeVersion: "16.0"
   generateEmptyDirectories: true
   defaultConfig: Release
-
 settings:
   base:
     SWIFT_VERSION: "5.9"
     CODE_SIGNING_ALLOWED: "NO"
     CODE_SIGNING_REQUIRED: "NO"
     CODE_SIGN_IDENTITY: ""
-
 packages:
   Firebase:
     url: https://github.com/firebase/firebase-ios-sdk
     from: "11.0.0"
-
 targets:
   QuranLock:
     type: application
@@ -65,3 +61,19 @@ targets:
         product: FirebaseFirestore
       - package: Firebase
         product: FirebaseAuth
+schemes:
+  QuranLock:
+    shared: true
+    build:
+      targets:
+        QuranLock: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Release
+    archive:
+      config: Release
