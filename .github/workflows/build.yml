@@ -64,7 +64,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+          echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/bc23c360-e2a9-448e-bcbf-7de3cf938063.mobileprovision
 
           echo "✅ Certificates and profile imported"
 
@@ -104,8 +104,8 @@ jobs:
               <string>manual</string>
               <key>provisioningProfiles</key>
               <dict>
-                  <key>com.rezaimia.Quran-Lock</key>
-                  <string>QuranLock AppStore</string>
+                  <key>com.rezaimia.QuranLock</key>
+                  <string>QuranLock AppStore New</string>
               </dict>
               <key>uploadSymbols</key>
               <true/>
