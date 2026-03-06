@@ -17,7 +17,7 @@ jobs:
 
       # 2. Select Xcode
       - name: Select Xcode 16
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+        run: echo "Xcode ready"
 
       # 3. Install XcodeGen
       - name: Install XcodeGen
@@ -86,13 +86,7 @@ jobs:
             -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
             -destination "generic/platform=iOS" \
             -clonedSourcePackagesDirPath SourcePackages \
-            IPHONEOS_DEPLOYMENT_TARGET=16.0 \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGNING_REQUIRED=YES \
-            CODE_SIGNING_ALLOWED=YES \
             DEVELOPMENT_TEAM=J875R59LND \
-            PROVISIONING_PROFILE_SPECIFIER="QuranLock AppStore" \
-            CODE_SIGN_IDENTITY="Apple Distribution"
 
       # 8. Export IPA
       - name: Export IPA
