@@ -2,287 +2,171 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var appState: AppState
-    
-    var isRamadan: Bool { appState.ramadanManager.isRamadan }
-    var rm: RamadanManager { appState.ramadanManager }
-    
+    @EnvironmentObject var languageManager: LanguageManager
+    @StateObject private var locationHelper = LocationHelper()
+    @StateObject private var prayerService = PrayerTimesService()
+    @State private var showSettings = false
+    @State private var showPrayerTimes = false
+
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Greeting
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Assalamu Alaikum")
-                                .font(.subheadline)
-                                .foregroundColor(Theme.textSecondary)
-                            Text(appState.userName.isEmpty ? "Bienvenue" : appState.userName)
-                                .font(.title.bold())
-                                .foregroundColor(Theme.textPrimary)
-                        }
-                        Spacer()
-                        if isRamadan {
-                            VStack {
-                                Text("🌙")
-                                    .font(.largeTitle)
-                                Text("Jour \(rm.currentDay)")
-                                    .font(.caption.bold())
-                                    .foregroundColor(Theme.ramadanGold)
+            ZStack {
+                Theme.primaryBg.ignoresSafeArea()
+
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Greeting
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L.salam)
+                                    .font(.title.bold())
+                                    .foregroundColor(Theme.gold)
+                                if !appState.userName.isEmpty {
+                                    Text(appState.userName)
+                                        .font(.title3)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            Spacer()
+                            Button(action: { showSettings = true }) {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.title2)
+                                    .foregroundColor(Theme.gold)
                             }
                         }
+                        .padding(.horizontal, 4)
+
+                        // Stats
+                        HStack(spacing: 12) {
+                            statCard(icon: "🔥", value: "\(appState.currentStreak)", label: "\(L.streak) (\(L.days))")
+                            statCard(icon: "⭐", value: "\(appState.hasanat)", label: L.hasanatLabel)
+                        }
+
+                        // Next Prayer
+                        if let times = prayerService.currentTimes, let next = times.nextPrayer {
+                            Button(action: { showPrayerTimes = true }) {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(L.nextPrayer)
+                                            .font(.caption).foregroundColor(Theme.textSecondary)
+                                        Text("\(next.name) — \(next.arabic)")
+                                            .font(.headline).foregroundColor(Theme.gold)
+                                    }
+                                    Spacer()
+                                    VStack(alignment: .trailing) {
+                                        Text(formatTime(next.time))
+                                            .font(.title2.bold()).foregroundColor(.white)
+                                        if let remaining = times.timeUntilNext {
+                                            Text(formatRemaining(remaining))
+                                                .font(.caption).foregroundColor(Theme.accent)
+                                        }
+                                    }
+                                }
+                                .cardStyle()
+                            }
+                        }
+
+                        // Quick Actions
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(L.quickActions)
+                                .font(.headline).foregroundColor(Theme.gold)
+
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                                quickAction(icon: "📖", title: L.quran) { appState.selectedTab = 1 }
+                                quickAction(icon: "🤲", title: L.duaas) { appState.selectedTab = 3 }
+                                quickAction(icon: "🕌", title: L.prayerTimes) { showPrayerTimes = true }
+                                quickAction(icon: "🎓", title: L.learn) { appState.selectedTab = 2 }
+                            }
+                        }
+
+                        // Daily reminder
+                        VStack(spacing: 8) {
+                            Text("💡")
+                                .font(.system(size: 30))
+                            Text("« La meilleure des actions est celle qui est régulière, même si elle est peu abondante. »")
+                                .font(.caption)
+                                .foregroundColor(Theme.textSecondary)
+                                .multilineTextAlignment(.center)
+                            Text("— Sahih al-Bukhari & Muslim")
+                                .font(.caption2)
+                                .foregroundColor(Theme.accent)
+
+                            Button(action: {
+                                AppState.shareText("« La meilleure des actions est celle qui est régulière, même si elle est peu abondante. »\n— Sahih al-Bukhari & Muslim\n\nPartagé depuis l'app Iqra 🤲")
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "square.and.arrow.up")
+                                    Text(L.share)
+                                }
+                                .font(.caption).foregroundColor(Theme.gold)
+                            }
+                        }
+                        .cardStyle()
                     }
-                    .padding(.horizontal)
-                    
-                    // Ramadan Banner
-                    if isRamadan {
-                        ramadanBanner
-                    } else if rm.daysUntilRamadan > 0 {
-                        preRamadanBanner
-                    }
-                    
-                    // Daily Progress
-                    dailyProgressCard
-                    
-                    // Quick Actions
-                    quickActions
-                    
-                    // Stats
-                    statsGrid
-                    
-                    // Last Ten Nights Alert
-                    if isRamadan && rm.isLastTenNights {
-                        lastTenNightsAlert
-                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 20)
                 }
-                .padding(.vertical)
             }
-            .background(Theme.background(isRamadan: isRamadan).ignoresSafeArea())
             .navigationBarHidden(true)
-        }
-    }
-    
-    // MARK: - Ramadan Banner
-    var ramadanBanner: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text("🕌 Ramadan Mubarak")
-                    .font(.headline.bold())
-                    .foregroundColor(Theme.ramadanGold)
-                Spacer()
-                Text("\(rm.daysRemaining) jours restants")
-                    .font(.caption)
-                    .foregroundColor(Theme.textSecondary)
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+                    .environmentObject(appState)
+                    .environmentObject(languageManager)
             }
-            
-            Divider().background(Theme.ramadanGold.opacity(0.3))
-            
-            HStack(spacing: 20) {
-                VStack(spacing: 4) {
-                    Text("Suhoor")
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                    Text(rm.fajrTime)
-                        .font(.title3.bold())
-                        .foregroundColor(Theme.textPrimary)
-                }
-                
-                VStack(spacing: 4) {
-                    Text("⏱ Iftar dans")
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                    Text(rm.iftarCountdown)
-                        .font(.title3.bold())
-                        .foregroundColor(Theme.ramadanGold)
-                }
-                
-                VStack(spacing: 4) {
-                    Text("Maghrib")
-                        .font(.caption)
-                        .foregroundColor(Theme.textSecondary)
-                    Text(rm.maghribTime)
-                        .font(.title3.bold())
-                        .foregroundColor(Theme.textPrimary)
+            .sheet(isPresented: $showPrayerTimes) {
+                PrayerTimesView()
+                    .environmentObject(appState)
+            }
+            .onAppear {
+                locationHelper.requestLocation()
+            }
+            .onChange(of: locationHelper.location) { loc in
+                if let loc = loc {
+                    Task {
+                        await prayerService.fetchPrayerTimes(
+                            latitude: loc.coordinate.latitude,
+                            longitude: loc.coordinate.longitude
+                        )
+                    }
                 }
             }
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.ramadanCardBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Theme.ramadanGold.opacity(0.3), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal)
     }
-    
-    var preRamadanBanner: some View {
-        HStack {
-            Text("🌙")
-                .font(.title)
-            VStack(alignment: .leading) {
-                Text("Ramadan approche !")
-                    .font(.headline)
-                    .foregroundColor(Theme.primaryGreen)
-                Text("Plus que \(rm.daysUntilRamadan) jours - Prépare-toi !")
-                    .font(.caption)
-                    .foregroundColor(Theme.textSecondary)
-            }
-            Spacer()
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.cardBackground)
-        )
-        .padding(.horizontal)
-    }
-    
-    // MARK: - Daily Progress
-    var dailyProgressCard: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text("📖 Progression du jour")
-                    .font(.headline)
-                    .foregroundColor(Theme.textPrimary)
-                Spacer()
-                Text("\(appState.pagesReadToday)/\(appState.dailyGoalPages) pages")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.primary(isRamadan: isRamadan))
-            }
-            
-            // Progress bar
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.white.opacity(0.1))
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Theme.primary(isRamadan: isRamadan))
-                        .frame(width: geo.size.width * min(CGFloat(appState.pagesReadToday) / CGFloat(max(appState.dailyGoalPages, 1)), 1.0))
-                }
-            }
-            .frame(height: 12)
-            
-            if appState.pagesReadToday >= appState.dailyGoalPages {
-                Text("Objectif atteint ! MashaAllah !")
-                    .font(.caption.bold())
-                    .foregroundColor(Theme.primary(isRamadan: isRamadan))
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.card(isRamadan: isRamadan))
-        )
-        .padding(.horizontal)
-    }
-    
-    // MARK: - Quick Actions
-    var quickActions: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            quickActionButton(icon: "book.fill", title: "Lire le Coran", color: Theme.primary(isRamadan: isRamadan)) {
-                appState.selectedTab = 1
-            }
-            
-            if isRamadan {
-                quickActionButton(icon: "hands.sparkles.fill", title: "Duaas Ramadan", color: Theme.ramadanGold) {
-                    appState.selectedTab = 2
-                }
-                quickActionButton(icon: "star.fill", title: "Sourates\nRecommandées", color: Theme.ramadanAccent) {
-                    appState.selectedTab = 2
-                }
-                quickActionButton(icon: "heart.fill", title: "Faire un Don", color: .pink) {
-                    appState.selectedTab = 2
-                }
-            } else {
-                quickActionButton(icon: "mic.fill", title: "Récitation", color: .blue) {
-                    // Navigate to recitation
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
-    
-    func quickActionButton(icon: String, title: String, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(spacing: 10) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundColor(color)
-                Text(title)
-                    .font(.caption.bold())
-                    .foregroundColor(Theme.textPrimary)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Theme.card(isRamadan: isRamadan))
-            )
-        }
-    }
-    
-    // MARK: - Stats
-    var statsGrid: some View {
-        HStack(spacing: 12) {
-            statCard(value: "\(appState.totalPagesRead)", label: "Pages lues", icon: "📄")
-            statCard(value: "\(appState.streakDays)", label: "Jours consécutifs", icon: "🔥")
-            statCard(value: "\(appState.currentSurah)/114", label: "Sourate", icon: "📖")
-        }
-        .padding(.horizontal)
-    }
-    
-    func statCard(value: String, label: String, icon: String) -> some View {
+
+    func statCard(icon: String, value: String, label: String) -> some View {
         VStack(spacing: 6) {
-            Text(icon)
-                .font(.title3)
-            Text(value)
-                .font(.title3.bold())
-                .foregroundColor(Theme.primary(isRamadan: isRamadan))
-            Text(label)
-                .font(.caption2)
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
+            Text(icon).font(.title2)
+            Text(value).font(.title.bold()).foregroundColor(.white)
+            Text(label).font(.caption).foregroundColor(Theme.textSecondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Theme.card(isRamadan: isRamadan))
-        )
+        .padding(16)
+        .background(Theme.cardBg)
+        .cornerRadius(14)
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.cardBorder, lineWidth: 1))
     }
-    
-    // MARK: - Last Ten Nights
-    var lastTenNightsAlert: some View {
-        VStack(spacing: 8) {
-            Text("⭐ Les 10 Dernières Nuits")
-                .font(.headline.bold())
-                .foregroundColor(Theme.ramadanGold)
-            Text("Intensifie tes adorations ! Nuit \(rm.currentNight) - \(rm.isOddNight ? "Nuit IMPAIRE (possible Laylat al-Qadr)" : "Nuit paire")")
-                .font(.caption)
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
-            
-            Text("اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي")
-                .font(.title3)
-                .foregroundColor(Theme.textPrimary)
-                .padding(.top, 4)
-            Text("Ô Allah, Tu es Celui qui pardonne, Tu aimes le pardon, alors pardonne-moi.")
-                .font(.caption)
-                .foregroundColor(Theme.textSecondary)
-                .italic()
+
+    func quickAction(icon: String, title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                Text(icon).font(.system(size: 28))
+                Text(title).font(.caption.bold()).foregroundColor(.white)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(16)
+            .background(Theme.cardBg)
+            .cornerRadius(14)
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.cardBorder, lineWidth: 1))
         }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Theme.ramadanCardBg)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Theme.ramadanGold.opacity(0.5), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal)
+    }
+
+    func formatTime(_ date: Date) -> String {
+        let f = DateFormatter(); f.dateFormat = "HH:mm"; return f.string(from: date)
+    }
+
+    func formatRemaining(_ interval: TimeInterval) -> String {
+        let h = Int(interval) / 3600; let m = (Int(interval) % 3600) / 60
+        if h > 0 { return "Dans \(h)h\(String(format: "%02d", m))" }
+        return "Dans \(m) min"
     }
 }

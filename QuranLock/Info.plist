@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>fr</string>
 	<key>CFBundleDisplayName</key>
-	<string>QuranLock</string>
+	<string>Iqra</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,9 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.0</string>
+	<string>3.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -49,7 +51,11 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-<key>CFBundleIconName</key>
-<string>AppIcon</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Iqra utilise votre position pour afficher les horaires de prière précis de la mosquée la plus proche et pour localiser les mosquées autour de vous.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Iqra utilise votre position pour les notifications d'adhan et les horaires de prière de votre mosquée la plus proche.</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Iqra vous envoie des notifications pour les horaires de prière avec l'adhan.</string>
 </dict>
 </plist>

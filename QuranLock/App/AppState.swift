@@ -1,50 +1,90 @@
 import SwiftUI
-import Foundation
 
 class AppState: ObservableObject {
-    @Published var isOnboarded: Bool
-    @Published var userName: String
-    @Published var dailyGoalPages: Int
-    @Published var pagesReadToday: Int
-    @Published var totalPagesRead: Int
-    @Published var currentSurah: Int
-    @Published var streakDays: Int
+    @AppStorage("userName") var userName: String = ""
+    @AppStorage("dailyGoal") var dailyGoal: Int = 5
+    @AppStorage("pagesRead") var pagesRead: Int = 0
+    @AppStorage("totalPagesRead") var totalPagesRead: Int = 0
+    @AppStorage("currentStreak") var currentStreak: Int = 0
+    @AppStorage("currentSurahIndex") var currentSurahIndex: Int = 0
+    @AppStorage("lastReadDate") var lastReadDate: String = ""
+    @AppStorage("hasCompletedOnboarding") var hasCompletedOnboarding: Bool = false
+    @AppStorage("ramadanModeEnabled") var ramadanModeEnabled: Bool = false
+    @AppStorage("hasanat") var hasanat: Int = 0
+    @AppStorage("arabicLearningRhythm") var arabicLearningRhythm: String = ""
+    @AppStorage("completedSurahsData") var completedSurahsData: String = "[]"
+    @AppStorage("khatmCompletedSurahs") var khatmCompletedSurahs: String = "[]"
+    @AppStorage("quizHighScore") var quizHighScore: Int = 0
+    @AppStorage("musicChallengeActive") var musicChallengeActive: Bool = false
+    @AppStorage("musicChallengeDaysCompleted") var musicChallengeDaysCompleted: Int = 0
+    @AppStorage("notificationsEnabled") var notificationsEnabled: Bool = true
+    @AppStorage("adhanEnabled") var adhanEnabled: Bool = true
+    @AppStorage("appLanguage") var appLanguage: String = AppLanguage.french.rawValue {
+        didSet { objectWillChange.send() }
+    }
+
     @Published var selectedTab: Int = 0
-    
-    let ramadanManager = RamadanManager()
-    
-    init() {
-        let defaults = UserDefaults.standard
-        self.isOnboarded = defaults.bool(forKey: "isOnboarded")
-        self.userName = defaults.string(forKey: "userName") ?? ""
-        self.dailyGoalPages = defaults.integer(forKey: "dailyGoalPages") == 0 ? 5 : defaults.integer(forKey: "dailyGoalPages")
-        self.pagesReadToday = defaults.integer(forKey: "pagesReadToday")
-        self.totalPagesRead = defaults.integer(forKey: "totalPagesRead")
-        self.currentSurah = defaults.integer(forKey: "currentSurah") == 0 ? 1 : defaults.integer(forKey: "currentSurah")
-        self.streakDays = defaults.integer(forKey: "streakDays")
+
+    var currentAppLanguage: AppLanguage {
+        AppLanguage(rawValue: appLanguage) ?? .french
     }
-    
-    func save() {
-        let defaults = UserDefaults.standard
-        defaults.set(isOnboarded, forKey: "isOnboarded")
-        defaults.set(userName, forKey: "userName")
-        defaults.set(dailyGoalPages, forKey: "dailyGoalPages")
-        defaults.set(pagesReadToday, forKey: "pagesReadToday")
-        defaults.set(totalPagesRead, forKey: "totalPagesRead")
-        defaults.set(currentSurah, forKey: "currentSurah")
-        defaults.set(streakDays, forKey: "streakDays")
+
+    var completedSurahIndices: [Int] {
+        get {
+            guard let data = khatmCompletedSurahs.data(using: .utf8),
+                  let indices = try? JSONDecoder().decode([Int].self, from: data) else { return [] }
+            return indices
+        }
+        set {
+            if let data = try? JSONEncoder().encode(newValue),
+               let string = String(data: data, encoding: .utf8) {
+                khatmCompletedSurahs = string
+            }
+        }
     }
-    
-    func addPages(_ count: Int) {
-        pagesReadToday += count
-        totalPagesRead += count
-        save()
+
+    var khatmProgress: Double { Double(completedSurahIndices.count) / 114.0 }
+
+    func markSurahCompleted(_ index: Int) {
+        var current = completedSurahIndices
+        if !current.contains(index) { current.append(index); completedSurahIndices = current; addHasanat(10) }
     }
-    
-    func completeOnboarding(name: String, goal: Int) {
-        userName = name
-        dailyGoalPages = goal
-        isOnboarded = true
-        save()
+
+    func addHasanat(_ amount: Int) { hasanat += amount }
+
+    func updateStreak() {
+        let today = Self.dateString(from: Date())
+        if lastReadDate != today {
+            let yesterday = Self.dateString(from: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date())
+            currentStreak = lastReadDate == yesterday ? currentStreak + 1 : 1
+            lastReadDate = today
+        }
+    }
+
+    static func dateString(from date: Date) -> String {
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; return f.string(from: date)
+    }
+
+    // MARK: - Share content
+    static func shareText(_ text: String) {
+        let av = UIActivityViewController(activityItems: [text], applicationActivities: nil)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let root = windowScene.windows.first?.rootViewController {
+            if let popover = av.popoverPresentationController {
+                popover.sourceView = root.view
+                popover.sourceRect = CGRect(x: root.view.bounds.midX, y: root.view.bounds.midY, width: 0, height: 0)
+                popover.permittedArrowDirections = []
+            }
+            root.present(av, animated: true)
+        }
+    }
+
+    func resetAll() {
+        userName = ""; dailyGoal = 5; pagesRead = 0; totalPagesRead = 0
+        currentStreak = 0; currentSurahIndex = 0; lastReadDate = ""
+        hasCompletedOnboarding = false; ramadanModeEnabled = false
+        hasanat = 0; arabicLearningRhythm = ""; khatmCompletedSurahs = "[]"
+        quizHighScore = 0; musicChallengeActive = false; musicChallengeDaysCompleted = 0
+        notificationsEnabled = true; adhanEnabled = true
     }
 }

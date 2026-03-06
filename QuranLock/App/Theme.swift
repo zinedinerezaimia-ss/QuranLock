@@ -1,33 +1,68 @@
 import SwiftUI
 
 struct Theme {
-    // Normal theme
-    static let primaryGreen = Color(red: 0.13, green: 0.55, blue: 0.13)
-    static let darkBackground = Color(red: 0.05, green: 0.05, blue: 0.08)
-    static let cardBackground = Color(red: 0.10, green: 0.10, blue: 0.14)
+    static let primaryBg = Color(red: 0.08, green: 0.07, blue: 0.16)
+    static let secondaryBg = Color(red: 0.12, green: 0.11, blue: 0.22)
+    static let cardBg = Color(red: 0.14, green: 0.13, blue: 0.26)
+    static let gold = Color(red: 0.85, green: 0.72, blue: 0.30)
+    static let goldLight = Color(red: 0.95, green: 0.85, blue: 0.50)
     static let textPrimary = Color.white
-    static let textSecondary = Color(white: 0.6)
+    static let textSecondary = Color(red: 0.65, green: 0.62, blue: 0.75)
+    static let accent = Color(red: 0.55, green: 0.40, blue: 0.85)
+    static let accentLight = Color(red: 0.70, green: 0.55, blue: 0.95)
+    static let success = Color(red: 0.30, green: 0.80, blue: 0.50)
+    static let warning = Color(red: 0.95, green: 0.75, blue: 0.25)
+    static let danger = Color(red: 0.90, green: 0.35, blue: 0.35)
+    static let cardBorder = Color(red: 0.25, green: 0.23, blue: 0.40)
     
-    // Ramadan theme
-    static let ramadanPurple = Color(red: 0.30, green: 0.10, blue: 0.50)
-    static let ramadanGold = Color(red: 0.85, green: 0.65, blue: 0.13)
-    static let ramadanDarkBg = Color(red: 0.05, green: 0.02, blue: 0.10)
-    static let ramadanCardBg = Color(red: 0.12, green: 0.06, blue: 0.18)
-    static let ramadanAccent = Color(red: 0.95, green: 0.75, blue: 0.20)
+    // Ramadan special colors
+    static let ramadanPurple = Color(red: 0.35, green: 0.20, blue: 0.60)
+    static let ramadanGold = Color(red: 0.95, green: 0.80, blue: 0.30)
     
-    static func primary(isRamadan: Bool) -> Color {
-        isRamadan ? ramadanGold : primaryGreen
+    static func cardStyle() -> some ViewModifier {
+        CardModifier()
+    }
+}
+
+struct CardModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(Theme.cardBg)
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Theme.cardBorder, lineWidth: 1)
+            )
+    }
+}
+
+extension View {
+    func cardStyle() -> some View {
+        modifier(CardModifier())
     }
     
-    static func background(isRamadan: Bool) -> Color {
-        isRamadan ? ramadanDarkBg : darkBackground
+    func goldButton() -> some View {
+        self
+            .font(.headline)
+            .foregroundColor(.black)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Theme.gold)
+            .cornerRadius(12)
     }
     
-    static func card(isRamadan: Bool) -> Color {
-        isRamadan ? ramadanCardBg : cardBackground
-    }
-    
-    static func accent(isRamadan: Bool) -> Color {
-        isRamadan ? ramadanAccent : primaryGreen
+    func outlineButton() -> some View {
+        self
+            .font(.headline)
+            .foregroundColor(Theme.gold)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color.clear)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Theme.gold, lineWidth: 1.5)
+            )
     }
 }
