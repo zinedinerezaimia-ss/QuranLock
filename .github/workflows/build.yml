@@ -35,11 +35,8 @@ jobs:
           PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          # Validate secrets are not empty
           if [ -z "$P12_BASE64" ]; then
-            echo "❌ ERROR: P12_BASE64 secret is empty!"
-            echo "Go to GitHub → Settings → Secrets → Actions"
-            echo "Add your .p12 certificate as base64"
+            echo "❌ ERROR: CERTIFICATE_BASE64 secret is empty!"
             exit 1
           fi
           if [ -z "$PROVISIONING_PROFILE_BASE64" ]; then
@@ -50,13 +47,11 @@ jobs:
             KEYCHAIN_PASSWORD="temporary_password_$(date +%s)"
           fi
 
-          # Create keychain
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-          # Import certificate
           echo -n "$P12_BASE64" | base64 --decode -o $RUNNER_TEMP/cert.p12
 
           if [ -z "$P12_PASSWORD" ]; then
@@ -68,7 +63,6 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-          # Import provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
@@ -90,15 +84,15 @@ jobs:
             -scheme QuranLock \
             -configuration Release \
             -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
-            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
             -clonedSourcePackagesDirPath SourcePackages \
+            IPHONEOS_DEPLOYMENT_TARGET=16.0 \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGNING_REQUIRED=YES \
             CODE_SIGNING_ALLOWED=YES \
             DEVELOPMENT_TEAM=J875R59LND \
             PROVISIONING_PROFILE_SPECIFIER="QuranLock AppStore" \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            -allowProvisioningUpdates
+            CODE_SIGN_IDENTITY="Apple Distribution"
 
       # 8. Export IPA
       - name: Export IPA
@@ -139,7 +133,6 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_API_KEY_CONTENT }}
         run: |
-          # If API key is set, use it
           if [ -n "$APP_STORE_CONNECT_API_KEY" ]; then
             echo -n "$APP_STORE_CONNECT_API_KEY" | base64 --decode > $RUNNER_TEMP/api_key.p8
             xcrun altool --upload-app \
@@ -150,11 +143,10 @@ jobs:
               --private-key $RUNNER_TEMP/api_key.p8
           else
             echo "⚠️ App Store Connect API key not configured"
-            echo "The IPA was built successfully but not uploaded."
-            echo "Download the artifact below and upload manually via Transporter."
+            echo "IPA built successfully. Download the artifact and upload via Transporter."
           fi
 
-      # 10. Save IPA as artifact (backup)
+      # 10. Save IPA as artifact
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
