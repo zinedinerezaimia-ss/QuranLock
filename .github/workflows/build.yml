@@ -90,7 +90,7 @@ jobs:
             -scheme QuranLock \
             -configuration Release \
             -archivePath $RUNNER_TEMP/QuranLock.xcarchive \
-            -destination "generic/platform=iOS" \
+            -sdk iphoneos \
             -clonedSourcePackagesDirPath SourcePackages \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGNING_REQUIRED=YES \
